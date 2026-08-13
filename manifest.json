@@ -1,0 +1,15 @@
+{
+  "name": "The Term Ledger",
+  "short_name": "Term Ledger",
+  "description": "Attendance and class test tracker for your term",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0e1015",
+  "theme_color": "#171310",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
