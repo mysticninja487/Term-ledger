@@ -1,4 +1,4 @@
-const CACHE_NAME = 'term-ledger-v1';
+const CACHE_NAME = 'term-ledger-v2';
 const CORE_ASSETS = [
   './',
   './index.html',

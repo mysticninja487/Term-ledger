@@ -333,6 +333,14 @@
         </div>
         <div class="term-summary" style="margin-top:8px;">Download a backup now and then, and after big updates — it's the one copy that survives no matter which browser or device you open this file in.</div>
       </div>
+      <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(233,226,207,0.1);">
+        <label>Live Autosave</label>
+        <div id="autosaveStatus" style="font-size:12px;color:var(--ink-soft);margin-bottom:8px;"></div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="ghost" id="connectAutosaveBtn" style="display:none;">🔗 Connect autosave file</button>
+          <button class="ghost" id="disconnectAutosaveBtn" style="display:none;">Disconnect</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -501,7 +509,143 @@ async function loadState(){
 }
 async function saveState(){
   await storageAdapter.set(STORAGE_KEY, JSON.stringify(state));
+  autosaveDirty = true;
+  if(autosaveHandle) await writeAutosaveFile();
 }
+
+/* ---------- Live Autosave: File System Access API (desktop Chrome/Edge) ---------- */
+const FS_SUPPORTED = 'showSaveFilePicker' in window;
+let autosaveHandle = null;
+let autosaveDirty = false;
+
+function idbOpen(){
+  return new Promise((resolve,reject)=>{
+    const req = indexedDB.open('term-ledger-fs', 1);
+    req.onupgradeneeded = ()=> req.result.createObjectStore('handles');
+    req.onsuccess = ()=> resolve(req.result);
+    req.onerror = ()=> reject(req.error);
+  });
+}
+async function idbGetHandle(){
+  try{
+    const db = await idbOpen();
+    return await new Promise((resolve,reject)=>{
+      const tx = db.transaction('handles','readonly');
+      const req = tx.objectStore('handles').get('autosave');
+      req.onsuccess = ()=> resolve(req.result || null);
+      req.onerror = ()=> reject(req.error);
+    });
+  }catch(e){ return null; }
+}
+async function idbSetHandle(handle){
+  try{
+    const db = await idbOpen();
+    return await new Promise((resolve,reject)=>{
+      const tx = db.transaction('handles','readwrite');
+      tx.objectStore('handles').put(handle,'autosave');
+      tx.oncomplete = ()=> resolve(true);
+      tx.onerror = ()=> reject(tx.error);
+    });
+  }catch(e){ return false; }
+}
+async function idbClearHandle(){
+  try{
+    const db = await idbOpen();
+    return await new Promise((resolve,reject)=>{
+      const tx = db.transaction('handles','readwrite');
+      tx.objectStore('handles').delete('autosave');
+      tx.oncomplete = ()=> resolve(true);
+      tx.onerror = ()=> reject(tx.error);
+    });
+  }catch(e){ return false; }
+}
+
+async function initAutosaveHandle(){
+  if(!FS_SUPPORTED) return;
+  const handle = await idbGetHandle();
+  if(!handle) return;
+  try{
+    const perm = await handle.queryPermission({mode:'readwrite'});
+    if(perm === 'granted' || perm === 'prompt'){ autosaveHandle = handle; }
+  }catch(e){ /* handle likely stale, ignore */ }
+}
+
+async function writeAutosaveFile(){
+  if(!autosaveHandle) return;
+  try{
+    const perm = await autosaveHandle.queryPermission({mode:'readwrite'});
+    if(perm !== 'granted') return; // can't silently prompt without a user gesture
+    const writable = await autosaveHandle.createWritable();
+    await writable.write(JSON.stringify(state, null, 2));
+    await writable.close();
+    autosaveDirty = false;
+  }catch(e){ console.warn('autosave write failed', e); }
+}
+
+async function connectAutosaveFile(){
+  if(!FS_SUPPORTED) return;
+  try{
+    const handle = await window.showSaveFilePicker({
+      suggestedName: 'term-ledger-live-backup.json',
+      types: [{description:'JSON', accept:{'application/json':['.json']}}]
+    });
+    const perm = await handle.requestPermission({mode:'readwrite'});
+    if(perm !== 'granted') return;
+    autosaveHandle = handle;
+    await idbSetHandle(handle);
+    await writeAutosaveFile();
+    renderAutosaveStatus();
+    showToast('Live autosave connected ✓');
+  }catch(e){ /* user cancelled the picker */ }
+}
+async function disconnectAutosaveFile(){
+  autosaveHandle = null;
+  await idbClearHandle();
+  renderAutosaveStatus();
+  showToast('Live autosave disconnected');
+}
+function renderAutosaveStatus(){
+  const statusEl = document.getElementById('autosaveStatus');
+  const connectBtn = document.getElementById('connectAutosaveBtn');
+  const disconnectBtn = document.getElementById('disconnectAutosaveBtn');
+  if(!statusEl) return;
+  if(!FS_SUPPORTED){
+    statusEl.textContent = 'Not supported in this browser — Chrome or Edge on desktop only. On mobile, a backup downloads automatically whenever you leave the app.';
+    connectBtn.style.display='none'; disconnectBtn.style.display='none';
+    return;
+  }
+  if(autosaveHandle){
+    statusEl.textContent = 'Connected — every change writes straight into your chosen file, no downloads needed.';
+    connectBtn.style.display='none'; disconnectBtn.style.display='inline-block';
+  } else {
+    statusEl.textContent = 'Not connected yet. Pick a file once, and every future change saves into it automatically — no repeat prompts.';
+    connectBtn.style.display='inline-block'; disconnectBtn.style.display='none';
+  }
+}
+
+/* ---------- Fallback for browsers without the File System Access API: ---------- */
+/* auto-download a snapshot whenever you leave/background the app, if anything changed */
+function downloadStateSnapshot(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `term-ledger-autosave-${todayISO()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  autosaveDirty = false;
+}
+function handleAutoLeaveSave(){
+  if(!autosaveDirty) return;
+  if(FS_SUPPORTED && autosaveHandle) return; // already handled by the live file write
+  downloadStateSnapshot();
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'hidden') handleAutoLeaveSave();
+});
+window.addEventListener('pagehide', handleAutoLeaveSave);
 function showToast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
@@ -1015,11 +1159,16 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
   reader.readAsText(file);
 });
 
+document.getElementById('connectAutosaveBtn').addEventListener('click', connectAutosaveFile);
+document.getElementById('disconnectAutosaveBtn').addEventListener('click', disconnectAutosaveFile);
+
 (async ()=>{
   await loadState();
   viewMonth = new Date(state.term.start+'T00:00:00');
   viewMonth.setDate(1);
   render();
+  await initAutosaveHandle();
+  renderAutosaveStatus();
 })();
 
 if('serviceWorker' in navigator){
