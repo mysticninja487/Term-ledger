@@ -9,6 +9,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Term Ledger">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -291,11 +292,161 @@
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
   .footnote{text-align:center; color:rgba(233,226,207,0.25); font-size:10.5px; margin-top:16px; font-family:'Special Elite', monospace;}
+
+  /* =====================  v2 additions  ===================== */
+  html{-webkit-text-size-adjust:100%;}
+  body{padding-left:max(16px, env(safe-area-inset-left)); padding-right:max(16px, env(safe-area-inset-right)); padding-top:max(28px, env(safe-area-inset-top));}
+  button, select, input{font-family:'Libre Franklin', sans-serif;}
+  button{-webkit-tap-highlight-color:transparent;}
+
+  /* ---- term bar ---- */
+  .term-bar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:12px;}
+  select, input, textarea{color-scheme:dark;}
+  .term-bar select, .settings select, .modal-field select, .auto-select, .rt-add select{
+    background:var(--paper-2); border:1px solid var(--line); color:var(--ink); border-radius:6px;
+    padding:6px 9px; font-size:13px; max-width:100%;
+  }
+  .term-bar select{min-width:150px;}
+  button.small{padding:6px 11px; font-size:12px;}
+  button.danger{border-color:rgba(226,100,92,0.55); color:var(--crimson);}
+  button.danger:hover{border-color:var(--crimson); color:#ff8f87; background:rgba(226,100,92,0.08);}
+  button.primary.danger{background:var(--crimson); color:#1a0c0b; border:none;}
+  button:disabled{opacity:0.45; cursor:not-allowed;}
+
+  /* ---- settings extras ---- */
+  .settings-block{margin-top:16px; padding-top:14px; border-top:1px solid rgba(233,226,207,0.1);}
+  .settings-block:first-of-type{margin-top:0; padding-top:0; border-top:none;}
+  .btn-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .settings .note{font-size:12px; color:var(--ink-soft); line-height:1.5; margin-top:8px;}
+  .settings .note b{color:var(--ink);}
+  .settings .note.warn{color:#e0b36a;}
+  .check-row{display:flex; align-items:flex-start; gap:8px; font-size:12.5px; color:var(--ink-soft); margin-top:10px; cursor:pointer; line-height:1.4;}
+  .check-row input{margin-top:2px;}
+  .snap-list{display:flex; flex-direction:column; gap:5px; margin-top:8px; max-height:190px; overflow:auto;}
+  .snap-row{display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:6px 10px; font-size:12px; color:var(--ink-soft);}
+  .snap-row b{color:var(--ink); font-weight:600;}
+
+  /* ---- auto-filled attendance ---- */
+  .stamp.auto{opacity:0.62; border-style:dashed; animation:none;}
+  .mini-dot.auto{background:transparent !important; border:1.5px solid currentColor; width:8px; height:8px;}
+  .mini-dot.present.auto{color:var(--green);}
+  .mini-dot.absent.auto{color:var(--crimson);}
+  .mini-dot.cancelled.auto{color:var(--gray);}
+  .sched-dots{position:absolute; bottom:4px; left:0; right:0; display:flex; gap:3px; justify-content:center;}
+  .sched-dot{width:6px; height:6px; border-radius:50%; border:1.5px solid var(--ink-soft); opacity:0.55;}
+  .cal-cell.today{border-style:solid; border-color:var(--gold);}
+  .cal-cell.today .num{color:var(--gold); font-weight:700;}
+
+  /* ---- routine summary box ---- */
+  .routine-box{
+    display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+    background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:9px 12px; margin-bottom:14px; font-size:12px; color:var(--ink-soft);
+  }
+  .routine-box b{color:var(--ink);}
+  .routine-box .rb-left{display:flex; flex-direction:column; gap:3px; min-width:0;}
+  .routine-box .rb-right{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .auto-select{font-size:12px; padding:5px 8px;}
+
+  /* ---- modals (wider / scrollable variants) ---- */
+  .modal-card{max-height:calc(100vh - 32px); overflow:auto;}
+  .modal-card.wide{max-width:560px;}
+  .modal-card.mid{max-width:430px;}
+  .modal-actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;}
+  .modal-actions > button{flex:1; min-width:110px;}
+  .modal-field{display:flex; flex-direction:column; gap:4px; margin-bottom:12px;}
+  .modal-field label{font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--ink-soft);}
+  .modal-field input[type=text], .modal-field input[type=date], .modal-field input[type=number], .modal-field input[type=time]{
+    border:1px solid var(--line); background:var(--paper); color:var(--ink); border-radius:6px; padding:8px 10px; font-size:14px; width:100%;
+  }
+  .modal-field input:focus, .modal-field select:focus{outline:1.5px solid var(--gold); outline-offset:1px;}
+  .modal-field .hint{font-size:11px; color:var(--ink-soft); line-height:1.4;}
+  .modal-check{display:flex; gap:8px; align-items:center; font-size:13px; color:var(--ink); margin-bottom:12px; cursor:pointer;}
+  .swatches{display:flex; gap:8px; flex-wrap:wrap;}
+  .swatch{width:26px; height:26px; border-radius:50%; border:2px solid transparent; cursor:pointer; padding:0;}
+  .swatch.sel{border-color:var(--ink); box-shadow:0 0 0 2px var(--paper-2) inset;}
+  .modal-sub b{color:var(--ink);}
+  .modal-sub.warn{color:#e0b36a;}
+
+  /* ---- day modal: slots ---- */
+  .slot-row{background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-bottom:8px;}
+  .slot-top{display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:12.5px; margin-bottom:7px;}
+  .slot-top .slot-name{font-weight:700; color:var(--ink);}
+  .slot-top .slot-status{font-size:11.5px; color:var(--ink-soft); display:flex; align-items:center; gap:6px;}
+  .status-chip{display:inline-block; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700; border:1px solid currentColor;}
+  .status-chip.present{color:var(--green);} .status-chip.absent{color:var(--crimson);} .status-chip.cancelled{color:var(--gray);}
+  .status-chip.none{color:var(--ink-soft); font-weight:500;}
+  .status-chip.auto{border-style:dashed;}
+  .seg{display:flex; gap:6px;}
+  .seg button{flex:1; border:1.5px solid var(--line); background:transparent; color:var(--ink-soft); border-radius:6px; padding:7px 4px; font-size:12px; font-weight:700; cursor:pointer;}
+  .seg button.present{color:var(--green); border-color:rgba(95,191,134,0.5);}
+  .seg button.absent{color:var(--crimson); border-color:rgba(226,100,92,0.5);}
+  .seg button.cancelled{color:var(--gray); border-color:rgba(124,133,145,0.6);}
+  .seg button.on{background:currentColor;}
+  .seg button.on span{color:#10131a;}
+  .seg button:hover{filter:brightness(1.35);}
+  .mini-label{font-size:10px; letter-spacing:1.2px; text-transform:uppercase; color:var(--ink-soft); margin:12px 0 6px;}
+
+  /* ---- routine editor ---- */
+  .rt-day{border:1px solid var(--line); border-radius:8px; padding:10px; margin-bottom:10px; background:var(--paper);}
+  .rt-day h5{font-family:'Special Elite', monospace; font-weight:400; font-size:13px; margin:0 0 8px; color:var(--gold); letter-spacing:1px; text-transform:uppercase;}
+  .rt-chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; min-height:4px;}
+  .rt-chip{display:inline-flex; align-items:center; gap:6px; background:var(--paper-2); border:1px solid var(--line); border-radius:20px; padding:4px 6px 4px 10px; font-size:12px;}
+  .rt-chip .t{color:var(--gold); font-weight:700; font-size:11px;}
+  .rt-chip .dot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+  .rt-chip .icon-btn{padding:0 4px; font-size:12px;}
+  .rt-empty{font-size:11.5px; color:var(--ink-soft); opacity:0.7;}
+  .rt-add{display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
+  .rt-add select{flex:1 1 170px; min-width:0;}
+  .rt-add input{width:124px; background:var(--paper-2); border:1px solid var(--line); color:var(--ink); border-radius:6px; padding:6px 8px; font-size:13px;}
+
+  /* ---- CT ---- */
+  .test-table td.marks-cell{white-space:nowrap;}
+  .marks-input{width:66px; background:var(--paper); border:1px solid var(--line); color:var(--ink); border-radius:6px; padding:5px 7px; font-size:13px;}
+  .marks-input:focus{outline:1.5px solid var(--gold); outline-offset:1px;}
+  .state-pill{display:inline-block; padding:2px 9px; border-radius:20px; font-weight:700; font-size:11px; border:1px dashed currentColor;}
+  .state-pill.pending{color:#e0b36a;}
+  .state-pill.upcoming{color:var(--ink-soft);}
+  .link-btn{background:none; border:none; color:var(--gold); cursor:pointer; font-size:12px; padding:2px 4px; text-decoration:underline;}
+  .link-btn:hover{filter:brightness(1.2);}
+  .mini-save{background:var(--gold); color:#211a0e; border:none; border-radius:6px; padding:5px 10px; font-size:12px; font-weight:700; cursor:pointer;}
+  .table-scroll{overflow-x:auto;}
+  .hint-inline{font-size:11.5px; color:var(--ink-soft); margin:8px 0 0;}
+
+  /* ---- phone layout: subject tabs become a scrolling strip ---- */
+  @media (max-width:780px){
+    body{padding-top:max(14px, env(safe-area-inset-top)); padding-bottom:40px;}
+    .cover{padding:16px 14px;}
+    .cover::before{width:14px;}
+    .cover-top, .stat-cards, .settings{margin-left:12px;}
+    .cover-top{flex-wrap:nowrap; align-items:flex-start;}
+    .cover-top > div:first-child{flex:1; min-width:0;}
+    .term-input{width:100%; font-size:20px;}
+    .term-bar select{flex:1 1 100%; min-width:0;}
+    .settings{margin-right:0;}
+    .stat-cards{display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;}
+    .stat-card{min-width:0; padding:7px 6px;}
+    .stat-num{font-size:16px;}
+    .stat-label{font-size:8.5px; letter-spacing:1px;}
+    .tabs{flex-direction:row; overflow-x:auto; gap:6px; padding:2px 2px 10px; scrollbar-width:thin;}
+    .tab{transform:none !important; border-right:1px solid var(--line); border-radius:8px; flex:0 0 auto; padding:8px 11px;}
+    .tab.active{box-shadow:0 0 0 1px var(--gold);}
+    .tab-name, .tab-group-label, .tab-del{display:none;}
+    .add-tab{transform:none; flex:0 0 auto; margin-top:0; white-space:nowrap;}
+    .page{border-radius:10px; padding:16px 14px 22px;}
+    .modal-card{padding:16px;}
+    .cal-grid{gap:4px;}
+    .stamp{font-size:12px; padding:1px 5px;}
+    .field input.wide{width:100%;}
+    .add-form .field{flex:1 1 40%;}
+    .add-form .field input{width:100%;}
+  }
+  @media (hover:none){ .tab-del{display:none;} }
+
 </style>
 </head>
 <body>
 
-<svg width="0" height="0" style="position:absolute">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <filter id="inkTexture">
     <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="noise"/>
     <feDisplacementMap in="SourceGraphic" in2="noise" scale="2"/>
@@ -307,41 +458,17 @@
     <div class="cover-top">
       <div>
         <p class="eyebrow">Term Ledger</p>
-        <input class="term-input" id="termName" value="" spellcheck="false"/>
+        <input class="term-input" id="termName" value="" spellcheck="false" aria-label="Term name"/>
+        <div class="term-bar">
+          <select id="termSelect" aria-label="Switch term"></select>
+          <button class="ghost small" id="newTermBtn">+ New term</button>
+          <button class="ghost small" id="routineBtn">🗓 Routine</button>
+        </div>
       </div>
-      <button class="gear-btn" id="gearBtn" title="Term settings">⚙</button>
+      <button class="gear-btn" id="gearBtn" title="Settings, backup &amp; terms" aria-label="Settings">⚙</button>
     </div>
     <div class="stat-cards" id="statCards"></div>
-    <div class="settings" id="settingsPanel">
-      <h3>Term Settings</h3>
-      <div class="settings-row">
-        <div><label>Term start (Sunday)</label><input type="date" id="termStart"></div>
-        <div><label>Total class days</label><input type="number" id="totalClassDays" min="1"></div>
-      </div>
-      <div class="term-summary" id="termSummary"></div>
-      <div style="margin-top:14px;">
-        <label>Holidays</label>
-        <div id="holidayList"></div>
-        <button class="add-holiday" id="addHoliday">+ add holiday range</button>
-      </div>
-      <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(233,226,207,0.1);">
-        <label>Backup</label>
-        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-          <button class="ghost" id="exportBtn">⬇ Export backup (.json)</button>
-          <button class="ghost" id="importBtn">⬆ Import backup</button>
-          <input type="file" id="importFile" accept="application/json" style="display:none;">
-        </div>
-        <div class="term-summary" style="margin-top:8px;">Download a backup now and then, and after big updates — it's the one copy that survives no matter which browser or device you open this file in.</div>
-      </div>
-      <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(233,226,207,0.1);">
-        <label>Live Autosave</label>
-        <div id="autosaveStatus" style="font-size:12px;color:var(--ink-soft);margin-bottom:8px;"></div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="ghost" id="connectAutosaveBtn" style="display:none;">🔗 Connect autosave file</button>
-          <button class="ghost" id="disconnectAutosaveBtn" style="display:none;">Disconnect</button>
-        </div>
-      </div>
-    </div>
+    <div class="settings" id="settingsPanel"></div>
   </div>
 
   <div class="body-grid">
@@ -351,31 +478,44 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div id="dayModalRoot"></div>
-<div id="confirmModalRoot"></div>
+<div id="modalRoot"></div>
+<input type="file" id="importFile" accept="application/json,.json" style="display:none;">
 
 <script>
-const FALLBACK_COLORS = ['#5fbf86','#e2645c','#c9a24d','#6f9ceb','#c980b0','#7fd4c8','#e0a25a','#8f9ae0'];
+'use strict';
+/* =====================================================================
+   THE TERM LEDGER  v2
+   Data model:  db = { version, savedAt, activeTermId, terms:[term], settings, lastExport }
+   term       = { id, name, start, totalClassDays, holidays[], autoMode, entities[] }
+   entity     = { id, code, name, type:'course'|'lab', color, colorStyle, sections[] }
+   section    = { id, teacherName, routine[], autoMode, attendance{date:[entry]}, tests[] }
+   routine    = { id, dow(0-4), time }
+   entry      = { s:'present'|'absent'|'cancelled', rid?:routineSlotId, x?:true(extra class) }
+   test (CT)  = { id, name, max, date, marks:number|null }   (null = not published yet)
+   ===================================================================== */
 
-// Course colors are solid dots; a course's paired lab shares the same hue but
-// renders as a hollow ring so the two are still visually distinct.
+/* ---------------- constants ---------------- */
+const LS_KEY = 'term-ledger-db-v2';
+const LEGACY_LS_KEY = 'bme-ledger-state';      // data written by the v1 app
+const IDB_NAME = 'term-ledger';
+const PALETTE = ['#4caf7d','#e2645c','#9b7fd4','#5b8def','#e2984f','#c9a24d','#d46fa8','#4fc3c9'];
+const STATUSES = ['present','absent','cancelled'];
+const AUTO_MODES = ['present','absent','cancelled','off'];
+const DOW_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DOW_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const WORK_DAYS = [0,1,2,3,4];                  // Sunday-Thursday; Fri/Sat are the weekend
+
+// Course colours are solid dots; a lab shares its course's hue but renders as a ring.
 const SUBJECT_STYLES = {
-  'BME 3211': {color:'#4caf7d', style:'solid'}, // Green
-  'BME 3213': {color:'#e2645c', style:'solid'}, // Red
-  'BME 3231': {color:'#9b7fd4', style:'solid'}, // Purple
-  'BME 3232': {color:'#9b7fd4', style:'ring'},  // Purple (lab variant)
-  'BME 3241': {color:'#5b8def', style:'solid'}, // Blue
-  'BME 3242': {color:'#5b8def', style:'ring'},  // Blue (lab variant)
-  'ECE 3215': {color:'#e2984f', style:'solid'}, // Orange
-  'ECE 3216': {color:'#e2984f', style:'ring'},  // Orange (lab variant)
+  'BME 3211': {color:'#4caf7d', style:'solid'},
+  'BME 3213': {color:'#e2645c', style:'solid'},
+  'BME 3231': {color:'#9b7fd4', style:'solid'},
+  'BME 3232': {color:'#9b7fd4', style:'ring'},
+  'BME 3241': {color:'#5b8def', style:'solid'},
+  'BME 3242': {color:'#5b8def', style:'ring'},
+  'ECE 3215': {color:'#e2984f', style:'solid'},
+  'ECE 3216': {color:'#e2984f', style:'ring'},
 };
-
-function dotStyle(entity){
-  return entity.colorStyle==='ring'
-    ? `background:transparent;border:2.5px solid ${entity.color};`
-    : `background:${entity.color};`;
-}
-
 const DEFAULT_ENTITIES = [
   {code:'BME 3211', name:'Biomaterials and Prosthetics', type:'course'},
   {code:'BME 3213', name:'Biomechanics', type:'course'},
@@ -386,796 +526,1581 @@ const DEFAULT_ENTITIES = [
   {code:'ECE 3215', name:'Body Sensor Networks', type:'course'},
   {code:'ECE 3216', name:'Body Sensor Networks Laboratory', type:'lab'},
 ];
-
 const DEFAULT_HOLIDAYS = [
-  {start:'2026-08-26', end:'2026-08-26'},
-  {start:'2026-09-01', end:'2026-09-01'},
-  {start:'2026-10-16', end:'2026-10-24'},
-  {start:'2026-12-14', end:'2026-12-14'},
-  {start:'2026-12-16', end:'2026-12-16'},
-  {start:'2026-12-25', end:'2026-12-31'},
+  ['2026-08-26','2026-08-26'], ['2026-09-01','2026-09-01'], ['2026-10-16','2026-10-24'],
+  ['2026-12-14','2026-12-14'], ['2026-12-16','2026-12-16'], ['2026-12-25','2026-12-31'],
 ];
 
-let state = null;
-let viewMonth = null;
-let modalOpen = null; // {date} of the day-entry modal currently open, or null
-let confirmAction = null; // {title, message, confirmLabel, onConfirm} or null
-
-function openConfirmModal({title, message, confirmLabel, onConfirm}){
-  confirmAction = {title, message, confirmLabel: confirmLabel || 'Delete', onConfirm};
-  renderConfirmModal();
+/* ---------------- tiny utils ---------------- */
+function uid(){ return Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-3); }
+function pad(n){ return String(n).padStart(2,'0'); }
+function isoDate(y,m,d){ return `${y}-${pad(m+1)}-${pad(d)}`; }
+function dateToISO(d){ return isoDate(d.getFullYear(), d.getMonth(), d.getDate()); }
+function todayISO(){ return dateToISO(new Date()); }
+function parseISO(iso){ const [y,m,d] = iso.split('-').map(Number); return new Date(y, m-1, d); }
+function addDaysISO(iso, n){ const d = parseISO(iso); d.setDate(d.getDate()+n); return dateToISO(d); }
+function isISO(s){ return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(parseISO(s)); }
+function fmtShort(iso){ return parseISO(iso).toLocaleDateString('default',{month:'short', day:'numeric'}); }
+function fmtLong(iso){ return parseISO(iso).toLocaleDateString('default',{weekday:'long', month:'long', day:'numeric'}); }
+function fmtStamp(ms){ return new Date(ms).toLocaleString('default',{month:'short', day:'numeric', hour:'numeric', minute:'2-digit'}); }
+function nextSundayISO(){ const d = new Date(); d.setDate(d.getDate() + ((7 - d.getDay()) % 7)); return dateToISO(d); }
+function escapeHtml(str){
+  return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function closeConfirmModal(){ confirmAction = null; renderConfirmModal(); }
-function renderConfirmModal(){
-  const root = document.getElementById('confirmModalRoot');
-  if(!confirmAction){ root.innerHTML=''; return; }
-  root.innerHTML = `
-    <div class="modal-overlay" id="confirmOverlay">
-      <div class="modal-card">
-        <h4>${escapeHtml(confirmAction.title)}</h4>
-        <div class="modal-sub">${escapeHtml(confirmAction.message)}</div>
-        <div class="modal-add-row">
-          <button class="modal-add-btn" id="confirmCancelBtn" style="border-color:var(--line); color:var(--ink-soft);">Cancel</button>
-          <button class="modal-add-btn absent" id="confirmOkBtn">${escapeHtml(confirmAction.confirmLabel)}</button>
-        </div>
-      </div>
-    </div>`;
-  document.getElementById('confirmOverlay').addEventListener('click', e=>{ if(e.target.id==='confirmOverlay') closeConfirmModal(); });
-  document.getElementById('confirmCancelBtn').addEventListener('click', closeConfirmModal);
-  document.getElementById('confirmOkBtn').addEventListener('click', async ()=>{
-    const cb = confirmAction.onConfirm;
-    confirmAction = null;
-    renderConfirmModal();
-    await cb();
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+/* ---------------- model factories ---------------- */
+function makeSection(teacherName){
+  return {id:uid(), teacherName, routine:[], autoMode:null, attendance:{}, tests:[]};
+}
+function makeEntity({code, name, type, color, colorStyle}){
+  return {
+    id:uid(), code, name, type,
+    color: color || PALETTE[0],
+    colorStyle: colorStyle || (type === 'lab' ? 'ring' : 'solid'),
+    sections: type === 'course' ? [makeSection('Teacher A'), makeSection('Teacher B')] : [makeSection(null)]
+  };
+}
+function makeTerm({name, start, totalClassDays, holidays, entities, autoMode}){
+  return {
+    id:uid(), name, start, totalClassDays,
+    holidays: (holidays || []).map(h => ({id:uid(), start:h[0], end:h[1]})),
+    autoMode: autoMode || 'present',
+    entities: entities || []
+  };
+}
+function defaultTerm(){
+  return makeTerm({
+    name:'BME Term — Aug 2026', start:'2026-08-23', totalClassDays:68,
+    holidays: DEFAULT_HOLIDAYS,
+    entities: DEFAULT_ENTITIES.map((e,i) => {
+      const st = SUBJECT_STYLES[e.code] || {color:PALETTE[i % PALETTE.length], style:'solid'};
+      return makeEntity({...e, color:st.color, colorStyle:st.style});
+    })
   });
 }
-
-function uid(){ return Math.random().toString(36).slice(2,9); }
-function isoDate(y,m,d){ return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
-function todayISO(){ const d=new Date(); return isoDate(d.getFullYear(), d.getMonth(), d.getDate()); }
-function fmtShort(iso){
-  const [y,m,d] = iso.split('-').map(Number);
-  return new Date(y,m-1,d).toLocaleDateString('default',{month:'short',day:'numeric'});
+function defaultDb(){
+  const t = defaultTerm();
+  return {version:2, savedAt:0, activeTermId:t.id, terms:[t], settings:{autoDownloadOnLeave:false}, lastExport:null};
 }
 
-function defaultState(){
+/* ---------------- normalisation / migration ----------------
+   Accepts: v2 files ({terms:[...]}), v1 files/state ({term, entities}), and
+   old attendance shapes (string, or array of strings per day).            */
+function normTest(t){
+  if(!t || typeof t !== 'object') return null;
+  let marks = null;
+  if(t.marks !== null && t.marks !== undefined && t.marks !== ''){
+    const n = Number(t.marks);
+    if(Number.isFinite(n)) marks = n;
+  }
+  let max = Number(t.max);
+  if(!Number.isFinite(max) || max <= 0) max = 100;
+  return {id:t.id || uid(), name:String(t.name || 'CT'), max, date: isISO(t.date) ? t.date : '', marks};
+}
+function normAttendance(att){
+  const out = {};
+  if(!att || typeof att !== 'object') return out;
+  for(const [date, v] of Object.entries(att)){
+    if(!isISO(date)) continue;
+    const arr = Array.isArray(v) ? v : [v];
+    const res = [];
+    arr.forEach(e => {
+      if(typeof e === 'string'){ if(STATUSES.includes(e)) res.push({s:e}); }
+      else if(e && STATUSES.includes(e.s)){
+        const ne = {s:e.s};
+        if(e.x) ne.x = true;
+        else if(e.rid) ne.rid = String(e.rid);
+        res.push(ne);
+      }
+    });
+    if(res.length) out[date] = res;
+  }
+  return out;
+}
+function normSection(s, type){
+  s = s || {};
   return {
-    term:{
-      name:'BME Term — Aug 2026',
-      start:'2026-08-23',
-      totalClassDays:68,
-      holidays: DEFAULT_HOLIDAYS.map(h=>({id:uid(), ...h}))
-    },
-    entities: DEFAULT_ENTITIES.map((e,i)=>{
-      const style = SUBJECT_STYLES[e.code] || {color: FALLBACK_COLORS[i % FALLBACK_COLORS.length], style:'solid'};
-      const sections = e.type==='course'
-        ? [{id:uid(), teacherName:'Teacher A', attendance:{}, tests:[]},
-           {id:uid(), teacherName:'Teacher B', attendance:{}, tests:[]}]
-        : [{id:uid(), teacherName:null, attendance:{}, tests:[]}];
-      return {id:uid(), code:e.code, name:e.name, type:e.type, color:style.color, colorStyle:style.style, sections};
-    }),
-    activeEntityId:null,
-    activeSectionId:null
+    id: s.id || uid(),
+    teacherName: type === 'course' ? String(s.teacherName || 'Teacher') : null,
+    routine: (Array.isArray(s.routine) ? s.routine : [])
+      .filter(r => r && Number.isInteger(r.dow) && r.dow >= 0 && r.dow <= 4)
+      .map(r => ({id:r.id || uid(), dow:r.dow, time:String(r.time || '').slice(0,20)})),
+    autoMode: AUTO_MODES.includes(s.autoMode) ? s.autoMode : null,
+    attendance: normAttendance(s.attendance),
+    tests: (Array.isArray(s.tests) ? s.tests : []).map(normTest).filter(Boolean)
+  };
+}
+function normEntity(e, legacy){
+  e = e || {};
+  let code = String(e.code || 'Subject');
+  if(code === 'BME 3214') code = 'BME 3232';                 // renamed lab keeps its records
+  const type = e.type === 'lab' ? 'lab' : 'course';
+  const known = SUBJECT_STYLES[code];
+  const color = (legacy && known) ? known.color : (e.color || (known && known.color) || PALETTE[0]);
+  const colorStyle = (legacy && known) ? known.style : (e.colorStyle === 'ring' ? 'ring' : (e.colorStyle === 'solid' ? 'solid' : (known ? known.style : (type === 'lab' ? 'ring' : 'solid'))));
+  let sections = (Array.isArray(e.sections) ? e.sections : []).map(s => normSection(s, type));
+  if(!sections.length) sections = makeEntity({code, name:'', type}).sections;
+  return {id:e.id || uid(), code, name:String(e.name || ''), type, color, colorStyle, sections};
+}
+function normTerm(t, legacy){
+  t = t || {};
+  const start = isISO(t.start) ? t.start : todayISO();
+  let days = parseInt(t.totalClassDays, 10);
+  if(!(days > 0)) days = 60;
+  const holidays = (Array.isArray(t.holidays) ? t.holidays : [])
+    .filter(h => h && isISO(h.start))
+    .map(h => { const end = isISO(h.end) && h.end >= h.start ? h.end : h.start; return {id:h.id || uid(), start:h.start, end}; });
+  return {
+    id: t.id || uid(),
+    name: String(t.name || 'Untitled term'),
+    start, totalClassDays: days, holidays,
+    autoMode: AUTO_MODES.includes(t.autoMode) ? t.autoMode : 'present',
+    entities: (Array.isArray(t.entities) ? t.entities : []).map(e => normEntity(e, legacy))
+  };
+}
+function normalizeDb(raw){
+  if(!raw || typeof raw !== 'object') throw new Error('This is not a Term Ledger file.');
+  let terms, legacy = false;
+  if(Array.isArray(raw.terms)){
+    terms = raw.terms.map(t => normTerm(t, false));
+  } else if(raw.term && Array.isArray(raw.entities)){
+    legacy = true;                                         // v1 single-term state
+    terms = [normTerm({...raw.term, entities: raw.entities}, true)];
+  } else {
+    throw new Error('This is not a Term Ledger file.');
+  }
+  if(!terms.length) throw new Error('This file does not contain any terms.');
+  const seen = new Set();
+  terms.forEach(t => { while(seen.has(t.id)) t.id = uid(); seen.add(t.id); });
+  const s = raw.settings || {};
+  return {
+    version: 2,
+    savedAt: Number(raw.savedAt) || 0,
+    activeTermId: terms.some(t => t.id === raw.activeTermId) ? raw.activeTermId : terms[0].id,
+    terms,
+    settings: {autoDownloadOnLeave: !!s.autoDownloadOnLeave},
+    lastExport: Number(raw.lastExport) || null
   };
 }
 
-const STORAGE_KEY = 'bme-ledger-state';
-const usingClaudeStorage = (typeof window.storage !== 'undefined' && window.storage !== null);
-
-const storageAdapter = {
-  async get(key){
-    if(usingClaudeStorage){
-      try{ return await window.storage.get(key, false); }catch(e){ return null; }
-    }
-    const v = localStorage.getItem(key);
-    return v ? {value:v} : null;
-  },
-  async set(key, value){
-    if(usingClaudeStorage){
-      try{ return await window.storage.set(key, value, false); }catch(e){ console.error('save failed', e); return null; }
-    }
-    try{ localStorage.setItem(key, value); return {value}; }
-    catch(e){ console.error('save failed', e); return null; }
-  }
-};
-
-function migrateState(s){
-  s.entities.forEach(e=>{
-    if(e.code === 'BME 3214') e.code = 'BME 3232'; // renamed subject, records preserved
-    const style = SUBJECT_STYLES[e.code];
-    if(style){ e.color = style.color; e.colorStyle = style.style; }
-    else if(!e.colorStyle){ e.colorStyle = 'solid'; }
-    e.sections.forEach(sec=>{
-      Object.keys(sec.attendance).forEach(date=>{
-        if(typeof sec.attendance[date] === 'string'){
-          sec.attendance[date] = [sec.attendance[date]]; // old single-status format -> array
-        }
-      });
+/* ---------------- IndexedDB (in-app database) ---------------- */
+let idbPromise = null, idbOk = true;
+function idb(){
+  if(idbPromise) return idbPromise;
+  idbPromise = new Promise((resolve, reject) => {
+    if(typeof indexedDB === 'undefined'){ reject(new Error('no indexedDB')); return; }
+    let req;
+    try{ req = indexedDB.open(IDB_NAME, 1); }catch(e){ reject(e); return; }
+    req.onupgradeneeded = () => {
+      const d = req.result;
+      if(!d.objectStoreNames.contains('kv')) d.createObjectStore('kv');
+      if(!d.objectStoreNames.contains('snapshots')) d.createObjectStore('snapshots', {keyPath:'id'});
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+    req.onblocked = () => reject(new Error('blocked'));
+  }).catch(() => { idbOk = false; return null; });
+  return idbPromise;
+}
+function idbTx(store, mode, fn){
+  return idb().then(d => {
+    if(!d) return null;
+    return new Promise((resolve, reject) => {
+      let result;
+      const tx = d.transaction(store, mode);
+      const req = fn(tx.objectStore(store));
+      if(req && 'onsuccess' in req) req.onsuccess = () => { result = req.result; };
+      tx.oncomplete = () => resolve(result);
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
     });
   });
-  return s;
+}
+const idbGet = (store, key) => idbTx(store, 'readonly', s => s.get(key));
+const idbAll = (store) => idbTx(store, 'readonly', s => s.getAll());
+const idbPut = (store, val, key) => idbTx(store, 'readwrite', s => key === undefined ? s.put(val) : s.put(val, key));
+const idbDel = (store, key) => idbTx(store, 'readwrite', s => s.delete(key));
+
+/* ---------------- persistence ---------------- */
+let db = null;
+let lsOk = true;
+let dirtySinceBackup = false;
+let idbWriteChain = Promise.resolve();
+let persistState = 'unknown';          // 'granted' | 'denied' | 'unknown'
+
+function commit(){
+  db.savedAt = Date.now();
+  const json = JSON.stringify(db);
+  try{ localStorage.setItem(LS_KEY, json); lsOk = true; }catch(e){ lsOk = false; }
+  const at = db.savedAt;
+  idbWriteChain = idbWriteChain.then(() => idbPut('kv', {json, savedAt:at}, 'db')).catch(() => {});
+  dirtySinceBackup = true;
+  queueAutosaveFile();
 }
 
-async function loadState(){
+function stashUnreadable(raw){
+  try{ localStorage.setItem('term-ledger-unreadable-' + Date.now(), raw); }catch(e){}
+}
+
+async function loadDb(){
+  const found = [];
+  let sawData = false, unreadable = false;
   try{
-    const res = await storageAdapter.get(STORAGE_KEY);
-    if(res && res.value){ state = migrateState(JSON.parse(res.value)); }
-    else { state = defaultState(); await saveState(); }
-  }catch(e){ state = defaultState(); }
-  if(!state.activeEntityId && state.entities.length){
-    state.activeEntityId = state.entities[0].id;
-    state.activeSectionId = state.entities[0].sections[0].id;
+    const rec = await idbGet('kv', 'db');
+    if(rec && rec.json){
+      sawData = true;
+      try{ found.push({savedAt:rec.savedAt || 0, db:normalizeDb(JSON.parse(rec.json))}); }
+      catch(e){ unreadable = true; stashUnreadable(rec.json); }
+    }
+  }catch(e){}
+  try{
+    const s = localStorage.getItem(LS_KEY);
+    if(s){
+      sawData = true;
+      try{ const p = JSON.parse(s); found.push({savedAt:Number(p.savedAt) || 0, db:normalizeDb(p)}); }
+      catch(e){ unreadable = true; stashUnreadable(s); }
+    }
+  }catch(e){}
+  if(found.length){
+    found.sort((a,b) => b.savedAt - a.savedAt);
+    return {db:found[0].db, unreadable};
   }
-}
-async function saveState(){
-  await storageAdapter.set(STORAGE_KEY, JSON.stringify(state));
-  autosaveDirty = true;
-  if(autosaveHandle) await writeAutosaveFile();
+  // nothing from v2 -> look for data written by the previous (v1) app
+  try{
+    const s = localStorage.getItem(LEGACY_LS_KEY);
+    if(s) return {db:normalizeDb(JSON.parse(s)), migrated:true};
+  }catch(e){}
+  return {db:defaultDb(), fresh:true, unreadable: unreadable || sawData};
 }
 
-/* ---------- Live Autosave: File System Access API (desktop Chrome/Edge) ---------- */
-const FS_SUPPORTED = 'showSaveFilePicker' in window;
-let autosaveHandle = null;
-let autosaveDirty = false;
-
-function idbOpen(){
-  return new Promise((resolve,reject)=>{
-    const req = indexedDB.open('term-ledger-fs', 1);
-    req.onupgradeneeded = ()=> req.result.createObjectStore('handles');
-    req.onsuccess = ()=> resolve(req.result);
-    req.onerror = ()=> reject(req.error);
-  });
+/* ---------------- restore points (snapshots) ---------------- */
+async function addSnapshot(label){
+  if(!db) return;
+  const at = Date.now();
+  await idbPut('snapshots', {id:at + Math.floor(Math.random()*9), at, label, json:JSON.stringify(db)}).catch(() => {});
+  pruneSnapshots();
 }
-async function idbGetHandle(){
-  try{
-    const db = await idbOpen();
-    return await new Promise((resolve,reject)=>{
-      const tx = db.transaction('handles','readonly');
-      const req = tx.objectStore('handles').get('autosave');
-      req.onsuccess = ()=> resolve(req.result || null);
-      req.onerror = ()=> reject(req.error);
-    });
-  }catch(e){ return null; }
+async function listSnapshots(){
+  const all = await idbAll('snapshots').catch(() => null);
+  return (all || []).sort((a,b) => b.at - a.at);
 }
-async function idbSetHandle(handle){
-  try{
-    const db = await idbOpen();
-    return await new Promise((resolve,reject)=>{
-      const tx = db.transaction('handles','readwrite');
-      tx.objectStore('handles').put(handle,'autosave');
-      tx.oncomplete = ()=> resolve(true);
-      tx.onerror = ()=> reject(tx.error);
-    });
-  }catch(e){ return false; }
+async function pruneSnapshots(){
+  const all = await listSnapshots();
+  for(const r of all.slice(30)) await idbDel('snapshots', r.id).catch(() => {});
 }
-async function idbClearHandle(){
-  try{
-    const db = await idbOpen();
-    return await new Promise((resolve,reject)=>{
-      const tx = db.transaction('handles','readwrite');
-      tx.objectStore('handles').delete('autosave');
-      tx.oncomplete = ()=> resolve(true);
-      tx.onerror = ()=> reject(tx.error);
-    });
-  }catch(e){ return false; }
+async function dailySnapshot(){
+  const today = todayISO();
+  let last = null;
+  try{ last = localStorage.getItem('term-ledger-last-daily'); }catch(e){}
+  if(last === today) return;
+  await addSnapshot('Daily snapshot');
+  try{ localStorage.setItem('term-ledger-last-daily', today); }catch(e){}
 }
 
-async function initAutosaveHandle(){
-  if(!FS_SUPPORTED) return;
-  const handle = await idbGetHandle();
-  if(!handle) return;
-  try{
-    const perm = await handle.queryPermission({mode:'readwrite'});
-    if(perm === 'granted' || perm === 'prompt'){ autosaveHandle = handle; }
-  }catch(e){ /* handle likely stale, ignore */ }
-}
-
-async function writeAutosaveFile(){
-  if(!autosaveHandle) return;
-  try{
-    const perm = await autosaveHandle.queryPermission({mode:'readwrite'});
-    if(perm !== 'granted') return; // can't silently prompt without a user gesture
-    const writable = await autosaveHandle.createWritable();
-    await writable.write(JSON.stringify(state, null, 2));
-    await writable.close();
-    autosaveDirty = false;
-  }catch(e){ console.warn('autosave write failed', e); }
-}
-
-async function connectAutosaveFile(){
-  if(!FS_SUPPORTED) return;
-  try{
-    const handle = await window.showSaveFilePicker({
-      suggestedName: 'term-ledger-live-backup.json',
-      types: [{description:'JSON', accept:{'application/json':['.json']}}]
-    });
-    const perm = await handle.requestPermission({mode:'readwrite'});
-    if(perm !== 'granted') return;
-    autosaveHandle = handle;
-    await idbSetHandle(handle);
-    await writeAutosaveFile();
-    renderAutosaveStatus();
-    showToast('Live autosave connected ✓');
-  }catch(e){ /* user cancelled the picker */ }
-}
-async function disconnectAutosaveFile(){
-  autosaveHandle = null;
-  await idbClearHandle();
-  renderAutosaveStatus();
-  showToast('Live autosave disconnected');
-}
-function renderAutosaveStatus(){
-  const statusEl = document.getElementById('autosaveStatus');
-  const connectBtn = document.getElementById('connectAutosaveBtn');
-  const disconnectBtn = document.getElementById('disconnectAutosaveBtn');
-  if(!statusEl) return;
-  if(!FS_SUPPORTED){
-    statusEl.textContent = 'Not supported in this browser — Chrome or Edge on desktop only. On mobile, a backup downloads automatically whenever you leave the app.';
-    connectBtn.style.display='none'; disconnectBtn.style.display='none';
-    return;
-  }
-  if(autosaveHandle){
-    statusEl.textContent = 'Connected — every change writes straight into your chosen file, no downloads needed.';
-    connectBtn.style.display='none'; disconnectBtn.style.display='inline-block';
-  } else {
-    statusEl.textContent = 'Not connected yet. Pick a file once, and every future change saves into it automatically — no repeat prompts.';
-    connectBtn.style.display='inline-block'; disconnectBtn.style.display='none';
-  }
-}
-
-/* ---------- Fallback for browsers without the File System Access API: ---------- */
-/* auto-download a snapshot whenever you leave/background the app, if anything changed */
-function downloadStateSnapshot(){
-  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+/* ---------------- export / import ---------------- */
+function downloadJson(filename, obj){
+  const blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `term-ledger-autosave-${todayISO()}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-  autosaveDirty = false;
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-function handleAutoLeaveSave(){
-  if(!autosaveDirty) return;
-  if(FS_SUPPORTED && autosaveHandle) return; // already handled by the live file write
-  downloadStateSnapshot();
+function exportAll(){
+  downloadJson(`term-ledger-all-${todayISO()}.json`, db);
+  db.lastExport = Date.now(); dirtySinceBackup = false; commit(); dirtySinceBackup = false;
 }
-document.addEventListener('visibilitychange', ()=>{
-  if(document.visibilityState === 'hidden') handleAutoLeaveSave();
-});
-window.addEventListener('pagehide', handleAutoLeaveSave);
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 1500);
+function exportTerm(term){
+  const safe = term.name.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'term';
+  downloadJson(`term-ledger-${safe}-${todayISO()}.json`, {...db, terms:[term], activeTermId:term.id});
+  db.lastExport = Date.now(); commit(); dirtySinceBackup = false;
+}
+async function applyImport(imported, mode){
+  await addSnapshot(mode === 'replace' ? 'Before import (replace all)' : 'Before import (add terms)');
+  if(mode === 'replace'){
+    imported.settings = db.settings;
+    imported.lastExport = db.lastExport;
+    db = imported;
+  } else {
+    const existing = new Set(db.terms.map(t => t.id));
+    imported.terms.forEach(t => {
+      if(existing.has(t.id)){ t.id = uid(); t.name = t.name + ' (imported)'; }
+      existing.add(t.id);
+      db.terms.push(t);
+    });
+    db.activeTermId = imported.terms[0].id;
+  }
+  commit();
 }
 
-/* ---------- term / holiday logic ---------- */
+/* ---------------- live autosave file (File System Access API) ---------------- */
+const FS_SUPPORTED = typeof window.showSaveFilePicker === 'function';
+const IS_BRAVE = !!(navigator.brave);
+let fsHandle = null;
+let fsState = 'none';                   // none | active | needs-permission | error
+let fsTimer = null, fsChain = Promise.resolve(), fsLastWrite = null, fsAskedThisSession = false;
+let onFsChange = () => {};
+
+// The previous app version kept its autosave-file handle in a different database; carry it over.
+function legacyAutosaveHandle(){
+  return new Promise(resolve => {
+    try{
+      const req = indexedDB.open('term-ledger-fs');
+      req.onerror = () => resolve(null);
+      req.onupgradeneeded = () => { try{ req.transaction.abort(); }catch(e){} resolve(null); };  // db did not exist
+      req.onsuccess = () => {
+        const d = req.result;
+        if(!d.objectStoreNames.contains('handles')){ d.close(); resolve(null); return; }
+        const r = d.transaction('handles', 'readonly').objectStore('handles').get('autosave');
+        r.onsuccess = () => { d.close(); resolve(r.result || null); };
+        r.onerror = () => { d.close(); resolve(null); };
+      };
+    }catch(e){ resolve(null); }
+  });
+}
+async function fsInit(){
+  if(!FS_SUPPORTED) return;
+  try{
+    let h = await idbGet('kv', 'autosaveHandle');
+    if(!h){
+      h = await legacyAutosaveHandle();
+      if(h) await idbPut('kv', h, 'autosaveHandle').catch(() => {});
+    }
+    if(!h) return;
+    fsHandle = h;
+    const p = await h.queryPermission({mode:'readwrite'});
+    fsState = p === 'granted' ? 'active' : 'needs-permission';
+  }catch(e){ fsState = 'error'; }
+}
+function queueAutosaveFile(){
+  if(!fsHandle) return;
+  clearTimeout(fsTimer);
+  fsTimer = setTimeout(() => { fsChain = fsChain.then(writeAutosaveFile); }, 500);
+}
+async function writeAutosaveFile(){
+  if(!fsHandle) return;
+  try{
+    const p = await fsHandle.queryPermission({mode:'readwrite'});
+    if(p !== 'granted'){ fsState = 'needs-permission'; onFsChange(); return; }
+    const w = await fsHandle.createWritable();
+    await w.write(JSON.stringify(db, null, 2));
+    await w.close();
+    fsState = 'active'; fsLastWrite = Date.now(); dirtySinceBackup = false;
+  }catch(e){ console.warn('autosave write failed', e); fsState = 'error'; }
+  onFsChange();
+}
+// after a browser restart the permission must be re-granted by a tap; ask once, on the first tap
+document.addEventListener('pointerdown', async () => {
+  if(!fsHandle || fsState !== 'needs-permission' || fsAskedThisSession) return;
+  fsAskedThisSession = true;
+  try{
+    const p = await fsHandle.requestPermission({mode:'readwrite'});
+    if(p === 'granted'){ fsState = 'active'; await writeAutosaveFile(); }
+  }catch(e){}
+  onFsChange();
+}, true);
+
+async function pickAutosaveFile(){
+  if(!FS_SUPPORTED) return null;
+  let h;
+  try{
+    h = await window.showSaveFilePicker({
+      suggestedName: 'term-ledger-live-backup.json',
+      types: [{description:'Term Ledger backup', accept:{'application/json':['.json']}}]
+    });
+    const p = await h.requestPermission({mode:'readwrite'});
+    if(p !== 'granted') return null;
+  }catch(e){ return null; }               // picker cancelled
+  let existing = null;                      // peek at what is already in the file BEFORE touching it
+  try{
+    const f = await h.getFile();
+    if(f.size > 0){
+      const txt = await f.text();
+      try{ existing = {parsed: normalizeDb(JSON.parse(txt))}; }catch(e){ existing = {unreadable:true}; }
+    }
+  }catch(e){}
+  return {handle:h, existing};
+}
+async function attachAutosaveHandle(h){
+  fsHandle = h; fsState = 'active';
+  await idbPut('kv', h, 'autosaveHandle').catch(() => {});
+  await writeAutosaveFile();
+}
+async function detachAutosaveHandle(){
+  fsHandle = null; fsState = 'none';
+  await idbDel('kv', 'autosaveHandle').catch(() => {});
+  onFsChange();
+}
+
+/* ---------------- optional "download a backup when I leave" ---------------- */
+function leaveSave(){
+  if(!db || !db.settings.autoDownloadOnLeave) return;
+  if(fsHandle && fsState === 'active') return;
+  if(!dirtySinceBackup) return;
+  downloadJson(`term-ledger-autosave-${todayISO()}.json`, db);
+  dirtySinceBackup = false;
+}
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') leaveSave(); });
+window.addEventListener('pagehide', leaveSave);
+
+/* =====================================================================
+   LOGIC: term calendar, routine auto-fill, attendance & CT maths
+   ===================================================================== */
+
+function curTerm(){ return db.terms.find(t => t.id === db.activeTermId) || db.terms[0]; }
+
 function expandHolidaySet(term){
   const set = new Set();
-  term.holidays.forEach(h=>{
-    let d = new Date(h.start+'T00:00:00');
-    const end = new Date(h.end+'T00:00:00');
-    let guard=0;
-    while(d<=end && guard<400){
-      set.add(isoDate(d.getFullYear(), d.getMonth(), d.getDate()));
-      d.setDate(d.getDate()+1); guard++;
-    }
+  term.holidays.forEach(h => {
+    let d = parseISO(h.start);
+    const end = parseISO(h.end);
+    for(let i = 0; i < 400 && d <= end; i++){ set.add(dateToISO(d)); d.setDate(d.getDate()+1); }
   });
   return set;
 }
+
+/* Walks forward from the start date counting Sun-Thu non-holiday days until the term's
+   class-day total is reached. Also lists every calendar date up to yesterday (the days
+   routine auto-fill is allowed to touch). */
 function computeTermInfo(term){
   const holidaySet = expandHolidaySet(term);
-  let d = new Date(term.start+'T00:00:00');
-  let count=0, endIso=term.start;
-  const classDates=[];
-  for(let i=0;i<500 && count<term.totalClassDays;i++){
-    const iso = isoDate(d.getFullYear(), d.getMonth(), d.getDate());
-    const dow = d.getDay();
-    if(dow!==5 && dow!==6 && !holidaySet.has(iso)){
-      count++; endIso = iso; classDates.push(iso);
-    }
+  const d = parseISO(term.start);
+  let count = 0, endIso = term.start;
+  const classDates = [];
+  for(let i = 0; i < 800 && count < term.totalClassDays; i++){
+    const iso = dateToISO(d), dow = d.getDay();
+    if(dow !== 5 && dow !== 6 && !holidaySet.has(iso)){ count++; endIso = iso; classDates.push(iso); }
     d.setDate(d.getDate()+1);
   }
-  return {holidaySet, endIso, classDates};
-}
-
-/* ---------- computations ---------- */
-function getEntity(id){ return state.entities.find(e=>e.id===id); }
-function getSection(entity, id){ return entity.sections.find(s=>s.id===id); }
-
-function computeSectionAttendance(section){
-  const vals = Object.values(section.attendance).flat();
-  const present = vals.filter(v=>v==='present').length;
-  const absent = vals.filter(v=>v==='absent').length;
-  const cancelled = vals.filter(v=>v==='cancelled').length;
-  const total = present+absent;
-  return {present, absent, cancelled, total, pct: total? Math.round((present/total)*100): null};
-}
-function computeSectionMarks(section){
-  const sumMax = section.tests.reduce((a,t)=>a+t.max,0);
-  const sumScored = section.tests.reduce((a,t)=>a+t.marks,0);
-  return {sumMax, sumScored, avgPct: sumMax? Math.round((sumScored/sumMax)*100): null};
-}
-function computeOverall(){
-  let pTot=0, aTot=0, allPct=[];
-  state.entities.forEach(e=>{
-    e.sections.forEach(s=>{
-      const att = computeSectionAttendance(s);
-      if(att.total){ pTot+=att.present; aTot+=att.total; }
-      s.tests.forEach(t=> allPct.push(t.marks/t.max*100));
-    });
-  });
-  const attStr = aTot? Math.round((pTot/aTot)*100)+'%' : '—';
-  const avgStr = allPct.length? Math.round(allPct.reduce((a,b)=>a+b,0)/allPct.length)+'%' : '—';
-  return {attStr, avgStr};
-}
-function computeProgress(term, termInfo){
   const today = todayISO();
-  if(today < term.start) return `Starts ${fmtShort(term.start)}`;
-  const idx = termInfo.classDates.filter(d=>d<=today).length;
-  if(idx>=term.totalClassDays) return `Complete (${term.totalClassDays}/${term.totalClassDays})`;
-  return `${idx} / ${term.totalClassDays}`;
+  const yesterday = addDaysISO(today, -1);
+  const lastAuto = yesterday < endIso ? yesterday : endIso;
+  const rangeDates = [];
+  if(term.start <= lastAuto){
+    let x = term.start;
+    for(let i = 0; i < 900 && x <= lastAuto; i++){ rangeDates.push(x); x = addDaysISO(x, 1); }
+  }
+  return {holidaySet, endIso, classDates, today, rangeDates};
 }
 
-function escapeHtml(str){ const div=document.createElement('div'); div.textContent=str; return div.innerHTML; }
+function listSections(term){
+  const out = [];
+  term.entities.forEach(ent => ent.sections.forEach(sec => out.push({ent, sec})));
+  return out;
+}
+function sectionLabel(ent, sec){
+  return ent.type === 'course' ? `${ent.code} · ${sec.teacherName}` : `${ent.code} (Lab)`;
+}
+function effectiveAutoMode(term, sec){ return sec.autoMode || term.autoMode || 'off'; }
+function autoModeLabel(mode){
+  return {present:'Present', absent:'Absent', cancelled:'Cancelled (not counted)', off:"Don't auto-fill"}[mode] || mode;
+}
+function byTime(a, b){ return (a.time || '~').localeCompare(b.time || '~') || a.id.localeCompare(b.id); }
 
-/* ---------- rendering ---------- */
-function render(){
-  const termInfo = computeTermInfo(state.term);
-  renderHeader(termInfo);
-  renderSettings(termInfo);
-  renderTabs();
-  renderPage(termInfo);
+/* Everything the UI needs to know about one section on one date.
+   - slots: the routine's classes for that weekday, each with the status it ends up with
+            (explicit if you logged it, otherwise the auto-fill status for days that have passed)
+   - others: extra classes / unmatched entries you logged yourself
+   - list: the flat list of counted-or-not statuses for the calendar and the maths        */
+function dayInfo(term, info, section, iso){
+  const dow = parseISO(iso).getDay();
+  const blocked = dow === 5 || dow === 6 || info.holidaySet.has(iso);
+  const entries = section.attendance[iso] || [];
+  const inTerm = iso >= term.start && iso <= info.endIso;
+  const slotsDef = (blocked || !inTerm) ? [] : section.routine.filter(r => r.dow === dow).slice().sort(byTime);
+  const ids = new Set(slotsDef.map(r => r.id));
+  const mode = effectiveAutoMode(term, section);
+  const autoOk = !blocked && mode !== 'off' && iso >= term.start && iso <= info.endIso && iso < info.today;
+
+  const byRid = {};
+  entries.forEach((e, idx) => { if(!e.x && e.rid && ids.has(e.rid)) byRid[e.rid] = idx; });
+  // entries from older versions (no slot id) fill the day's unfilled slots in order
+  const looseIdx = [];
+  entries.forEach((e, idx) => { if(!e.x && !(e.rid && ids.has(e.rid))) looseIdx.push(idx); });
+  let li = 0;
+  const slots = slotsDef.map(r => {
+    let idx = byRid[r.id];
+    if(idx === undefined && li < looseIdx.length) idx = looseIdx[li++];
+    if(idx !== undefined){
+      return {id:r.id, time:r.time, status:entries[idx].s, auto:false, explicit:true, entryIdx:idx};
+    }
+    return {id:r.id, time:r.time, status: autoOk ? mode : null, auto:autoOk, explicit:false, entryIdx:null};
+  });
+  const others = [];
+  entries.forEach((e, idx) => {
+    const used = slots.some(s => s.entryIdx === idx);
+    if(!used) others.push({idx, s:e.s, extra:!!e.x});
+  });
+  const list = [];
+  slots.forEach(s => { if(s.status) list.push({s:s.status, auto:s.auto}); });
+  others.forEach(o => list.push({s:o.s, auto:false}));
+  return {iso, dow, blocked, slots, others, list, N:slots.length, mode, autoOk};
 }
 
-function renderHeader(termInfo){
-  document.getElementById('termName').value = state.term.name;
-  const overall = computeOverall();
-  const progress = computeProgress(state.term, termInfo);
-  document.getElementById('statCards').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${overall.attStr}</div><div class="stat-label">Attendance</div></div>
-    <div class="stat-card"><div class="stat-num">${overall.avgStr}</div><div class="stat-label">Avg. CT Marks</div></div>
-    <div class="stat-card"><div class="stat-num">${progress}</div><div class="stat-label">Class Days</div></div>
-    <div class="stat-card"><div class="stat-num">${state.entities.length}</div><div class="stat-label">Subjects</div></div>
-  `;
-}
-
-function renderSettings(termInfo){
-  document.getElementById('termStart').value = state.term.start;
-  document.getElementById('totalClassDays').value = state.term.totalClassDays;
-  document.getElementById('termSummary').innerHTML =
-    `Runs <b>${fmtShort(state.term.start)}</b> → <b>${fmtShort(termInfo.endIso)}</b> (${state.term.totalClassDays} class days, Sun–Thu, holidays excluded)`;
-
-  const list = document.getElementById('holidayList');
-  list.innerHTML = state.term.holidays.map(h=>`
-    <div class="holiday-row" data-id="${h.id}">
-      <input type="date" class="hol-start" value="${h.start}">
-      <span>to</span>
-      <input type="date" class="hol-end" value="${h.end}">
-      <button class="icon-btn hol-del" title="Remove">✕</button>
-    </div>`).join('');
-
-  list.querySelectorAll('.holiday-row').forEach(row=>{
-    const id = row.dataset.id;
-    row.querySelector('.hol-start').addEventListener('change', async e=>{
-      const h = state.term.holidays.find(x=>x.id===id); h.start = e.target.value;
-      if(h.end < h.start) h.end = h.start;
-      await saveState(); render();
+/* Attendance totals for one section. Cancelled classes are tracked but never counted. */
+function sectionStats(term, info, section){
+  let present = 0, absent = 0, cancelled = 0, auto = 0;
+  const dates = new Set(Object.keys(section.attendance));
+  if(section.routine.length && effectiveAutoMode(term, section) !== 'off') info.rangeDates.forEach(d => dates.add(d));
+  dates.forEach(iso => {
+    dayInfo(term, info, section, iso).list.forEach(it => {
+      if(it.s === 'present'){ present++; if(it.auto) auto++; }
+      else if(it.s === 'absent'){ absent++; if(it.auto) auto++; }
+      else cancelled++;
     });
-    row.querySelector('.hol-end').addEventListener('change', async e=>{
-      const h = state.term.holidays.find(x=>x.id===id); h.end = e.target.value;
-      if(h.end < h.start) h.end = h.start;
-      await saveState(); render();
-    });
-    row.querySelector('.hol-del').addEventListener('click', async ()=>{
-      state.term.holidays = state.term.holidays.filter(x=>x.id!==id);
-      await saveState(); render();
+  });
+  const total = present + absent;
+  return {present, absent, cancelled, auto, total, pct: total ? Math.round(present / total * 100) : null};
+}
+function entityStats(term, info, ent){
+  const acc = {present:0, absent:0, cancelled:0, auto:0, total:0};
+  ent.sections.forEach(sec => {
+    const s = sectionStats(term, info, sec);
+    acc.present += s.present; acc.absent += s.absent; acc.cancelled += s.cancelled; acc.auto += s.auto; acc.total += s.total;
+  });
+  acc.pct = acc.total ? Math.round(acc.present / acc.total * 100) : null;
+  return acc;
+}
+
+/* CT maths: only tests with published marks count towards scores and averages. */
+function sectionMarks(section){
+  const all = section.tests;
+  const pub = all.filter(t => t.marks !== null);
+  const sumMaxAll = all.reduce((a,t) => a + t.max, 0);
+  const sumMaxPub = pub.reduce((a,t) => a + t.max, 0);
+  const scored = pub.reduce((a,t) => a + t.marks, 0);
+  return {
+    sumMaxAll, sumMaxPub, scored,
+    pending: all.length - pub.length,
+    avgPct: sumMaxPub ? Math.round(scored / sumMaxPub * 100) : null
+  };
+}
+
+function computeOverall(term, info){
+  let present = 0, total = 0, scored = 0, maxPub = 0, pending = 0;
+  term.entities.forEach(ent => ent.sections.forEach(sec => {
+    const a = sectionStats(term, info, sec);
+    present += a.present; total += a.total;
+    const m = sectionMarks(sec);
+    scored += m.scored; maxPub += m.sumMaxPub; pending += m.pending;
+  }));
+  return {
+    attPct: total ? Math.round(present / total * 100) : null,
+    avgPct: maxPub ? Math.round(scored / maxPub * 100) : null,
+    pending
+  };
+}
+function computeProgress(term, info){
+  if(info.today < term.start) return `Starts ${fmtShort(term.start)}`;
+  const done = info.classDates.filter(d => d <= info.today).length;
+  return done >= term.totalClassDays ? `Done · ${term.totalClassDays}` : `${done} / ${term.totalClassDays}`;
+}
+function gradeColor(pct){
+  if(pct >= 80) return 'var(--green)';
+  if(pct >= 60) return 'var(--gold)';
+  return 'var(--crimson)';
+}
+function routineSummary(section){
+  if(!section.routine.length) return '';
+  const counts = {};
+  section.routine.forEach(r => { counts[r.dow] = (counts[r.dow] || 0) + 1; });
+  return WORK_DAYS.filter(d => counts[d]).map(d => DOW_SHORT[d] + (counts[d] > 1 ? '×' + counts[d] : '')).join(' · ');
+}
+
+/* =====================================================================
+   UI
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const ui = {settingsOpen:false, perTerm:{}, ctEdit:null, routineSel:{}, routineTime:{}};
+let toastTimer = null;
+
+function showToast(msg){
+  const t = $('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+function dotStyle(ent){
+  return ent.colorStyle === 'ring' ? `background:transparent;border:2.5px solid ${ent.color};` : `background:${ent.color};`;
+}
+
+/* ---------------- modal system ---------------- */
+let modal = null;
+function openModal(spec){ modal = spec; drawModal(); }
+function closeModal(){
+  const m = modal; modal = null;
+  $('modalRoot').innerHTML = '';
+  if(m && m.onClose) m.onClose();
+}
+function drawModal(){
+  const root = $('modalRoot');
+  if(!modal){ root.innerHTML = ''; return; }
+  const prev = root.querySelector('.modal-card');
+  const scroll = prev ? prev.scrollTop : 0;
+  root.innerHTML = `<div class="modal-overlay" id="modalOverlay"><div class="modal-card ${modal.cls || ''}" role="dialog" aria-modal="true">${modal.render()}</div></div>`;
+  const card = root.querySelector('.modal-card');
+  card.scrollTop = scroll;
+  const overlay = $('modalOverlay');
+  let downOnOverlay = false;
+  overlay.addEventListener('mousedown', e => { downOnOverlay = e.target === overlay; });
+  overlay.addEventListener('click', e => { if(downOnOverlay && e.target === overlay) closeModal(); });
+  if(modal.wire) modal.wire(root);
+}
+function refreshModal(){ if(modal && modal.live) drawModal(); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && modal) closeModal(); });
+
+function askConfirm({title, message, confirmLabel = 'Confirm', danger = false}){
+  return new Promise(resolve => {
+    let done = false;
+    const finish = v => { if(!done){ done = true; resolve(v); } };
+    openModal({
+      cls:'',
+      render:() => `<h4>${escapeHtml(title)}</h4><div class="modal-sub">${escapeHtml(message)}</div>
+        <div class="modal-actions">
+          <button class="ghost" data-act="no">Cancel</button>
+          <button class="primary ${danger ? 'danger' : ''}" data-act="yes">${escapeHtml(confirmLabel)}</button>
+        </div>`,
+      wire:root => {
+        root.querySelector('[data-act="no"]').addEventListener('click', closeModal);
+        root.querySelector('[data-act="yes"]').addEventListener('click', () => { finish(true); closeModal(); });
+      },
+      onClose:() => finish(false)
     });
   });
 }
 
-function renderTabs(){
-  const tabs = document.getElementById('tabs');
+function fieldHtml(f){
+  const id = 'f_' + f.id;
+  if(f.type === 'note') return `<div class="modal-sub">${f.html}</div>`;
+  if(f.type === 'checkbox') return `<label class="modal-check"><input type="checkbox" id="${id}" ${f.value ? 'checked' : ''}> ${escapeHtml(f.label)}</label>`;
+  if(f.type === 'swatches'){
+    return `<div class="modal-field"><label>${escapeHtml(f.label)}</label>
+      <div class="swatches" id="${id}" data-value="${escapeHtml(f.value)}">${PALETTE.map(c =>
+        `<button type="button" class="swatch ${c === f.value ? 'sel' : ''}" data-color="${c}" style="background:${c}" aria-label="${c}"></button>`).join('')}</div></div>`;
+  }
+  if(f.type === 'select'){
+    return `<div class="modal-field"><label for="${id}">${escapeHtml(f.label)}</label>
+      <select id="${id}" ${f.disabled ? 'disabled' : ''}>${f.options.map(o =>
+        `<option value="${escapeHtml(o.value)}" ${o.value === f.value ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}</select>
+      ${f.hint ? `<div class="hint">${escapeHtml(f.hint)}</div>` : ''}</div>`;
+  }
+  return `<div class="modal-field"><label for="${id}">${escapeHtml(f.label)}</label>
+    <input id="${id}" type="${f.type || 'text'}" value="${escapeHtml(f.value == null ? '' : f.value)}" placeholder="${escapeHtml(f.placeholder || '')}"
+      ${f.step ? `step="${f.step}"` : ''} ${f.min != null ? `min="${f.min}"` : ''} autocomplete="off">
+    ${f.hint ? `<div class="hint">${escapeHtml(f.hint)}</div>` : ''}</div>`;
+}
+
+/* Generic form dialog. Resolves with {field: value} on submit, null when cancelled,
+   or {__action:'x'} when one of the extra buttons is used. */
+function askForm({title, sub, fields, submitLabel = 'Save', extraButtons = []}){
+  return new Promise(resolve => {
+    let done = false;
+    const finish = v => { if(!done){ done = true; resolve(v); } };
+    openModal({
+      cls:'mid',
+      render:() => `<h4>${escapeHtml(title)}</h4>${sub ? `<div class="modal-sub">${sub}</div>` : ''}
+        <form id="modalForm" novalidate>
+          ${fields.map(fieldHtml).join('')}
+          <div class="modal-actions">
+            <button type="button" class="ghost" data-act="cancel">Cancel</button>
+            ${extraButtons.map(b => `<button type="button" class="ghost ${b.cls || ''}" data-extra="${b.act}">${escapeHtml(b.label)}</button>`).join('')}
+            <button type="submit" class="primary">${escapeHtml(submitLabel)}</button>
+          </div>
+        </form>`,
+      wire:root => {
+        const form = root.querySelector('#modalForm');
+        root.querySelector('[data-act="cancel"]').addEventListener('click', closeModal);
+        root.querySelectorAll('[data-extra]').forEach(b => b.addEventListener('click', () => {
+          finish({__action:b.dataset.extra}); closeModal();
+        }));
+        root.querySelectorAll('.swatches').forEach(sw => sw.addEventListener('click', e => {
+          const b = e.target.closest('.swatch'); if(!b) return;
+          sw.dataset.value = b.dataset.color;
+          sw.querySelectorAll('.swatch').forEach(x => x.classList.toggle('sel', x === b));
+        }));
+        const first = form.querySelector('input[type=text], input[type=number], input[type=date]');
+        if(first && !/Mobi|Android/i.test(navigator.userAgent)) first.focus();
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          const out = {};
+          for(const f of fields){
+            if(f.type === 'note') continue;
+            const el = form.querySelector('#f_' + f.id);
+            if(f.type === 'checkbox') out[f.id] = el.checked;
+            else if(f.type === 'swatches') out[f.id] = el.dataset.value;
+            else out[f.id] = el.value.trim();
+            if(f.required && !out[f.id]){
+              el.style.outline = '1.5px solid var(--crimson)'; el.focus();
+              showToast(`${f.label} is required`); return;
+            }
+          }
+          for(const f of fields){
+            if(f.validate){
+              const msg = f.validate(out);
+              if(msg){ showToast(msg); const el = form.querySelector('#f_' + f.id); if(el) el.focus(); return; }
+            }
+          }
+          finish(out); closeModal();
+        });
+      },
+      onClose:() => finish(null)
+    });
+  });
+}
+
+/* ---------------- per-term UI state ---------------- */
+function tstate(term){ return ui.perTerm[term.id] || (ui.perTerm[term.id] = {entityId:null, sectionId:null, month:null}); }
+function resolveActive(term, info){
+  const st = tstate(term);
+  const ent = term.entities.find(e => e.id === st.entityId) || term.entities[0] || null;
+  st.entityId = ent ? ent.id : null;
+  const sec = ent ? (ent.sections.find(s => s.id === st.sectionId) || ent.sections[0]) : null;
+  st.sectionId = sec ? sec.id : null;
+  if(!st.month){
+    const t = info.today;
+    const base = (t >= term.start && t <= info.endIso) ? t : term.start;
+    st.month = base.slice(0, 7) + '-01';
+  }
+  return {st, ent, sec};
+}
+
+/* ---------------- main render ---------------- */
+function render(){
+  const term = curTerm();
+  const info = computeTermInfo(term);
+  renderCover(term, info);
+  renderSettings(term, info);
+  renderTabs(term, info);
+  renderPage(term, info);
+  refreshModal();
+}
+
+function renderCover(term, info){
+  $('termName').value = term.name;
+  $('termSelect').innerHTML = db.terms.map(t =>
+    `<option value="${t.id}" ${t.id === term.id ? 'selected' : ''}>${escapeHtml(t.name)}</option>`).join('');
+  const o = computeOverall(term, info);
+  $('statCards').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${o.attPct === null ? '—' : o.attPct + '%'}</div><div class="stat-label">Attendance</div></div>
+    <div class="stat-card"><div class="stat-num">${o.avgPct === null ? '—' : o.avgPct + '%'}</div><div class="stat-label">Avg. CT Marks</div></div>
+    <div class="stat-card"><div class="stat-num">${o.pending}</div><div class="stat-label">Marks Pending</div></div>
+    <div class="stat-card"><div class="stat-num">${computeProgress(term, info)}</div><div class="stat-label">Class Days</div></div>
+    <div class="stat-card"><div class="stat-num">${term.entities.length}</div><div class="stat-label">Subjects</div></div>`;
+}
+
+/* ---------------- settings panel ---------------- */
+function autosaveBlockHtml(){
+  if(!FS_SUPPORTED){
+    const why = IS_BRAVE
+      ? `Brave turns this feature off by default. To enable it: open <b>brave://flags/#file-system-access-api</b>, set it to <b>Enabled</b>, restart Brave, and come back here.`
+      : `This browser does not let websites write to a file on your computer (Chrome, Edge and Brave-with-the-flag-enabled on desktop do).`;
+    return `<div class="note">${why}<br>Nothing is lost meanwhile: your data is already saved inside the app, and you can export a backup file whenever you like.</div>`;
+  }
+  const last = fsLastWrite ? ` Last written ${fmtStamp(fsLastWrite)}.` : '';
+  if(fsState === 'active'){
+    return `<div class="note"><b>Connected.</b> Every change is written into your chosen file automatically.${last}</div>
+      <div class="btn-row" style="margin-top:8px"><button class="ghost small" data-act="fs-disconnect">Disconnect</button></div>`;
+  }
+  if(fsState === 'needs-permission'){
+    return `<div class="note warn"><b>Paused.</b> After a browser restart, the browser needs one tap of permission to keep writing to your file. Tap anywhere, or the button below.</div>
+      <div class="btn-row" style="margin-top:8px"><button class="ghost small" data-act="fs-resume">Allow now</button><button class="ghost small" data-act="fs-disconnect">Disconnect</button></div>`;
+  }
+  if(fsState === 'error'){
+    return `<div class="note warn">The last write to your autosave file failed. Reconnect it to keep going.</div>
+      <div class="btn-row" style="margin-top:8px"><button class="ghost small" data-act="fs-connect">Reconnect file</button><button class="ghost small" data-act="fs-disconnect">Disconnect</button></div>`;
+  }
+  return `<div class="note">Optional extra copy: pick a <b>.json</b> file once, and every change is written into it automatically. You can also pick an <b>existing backup</b> to load it.</div>
+    <div class="btn-row" style="margin-top:8px"><button class="ghost small" data-act="fs-connect">🔗 Connect autosave file</button></div>`;
+}
+
+function renderSettings(term, info){
+  const panel = $('settingsPanel');
+  panel.classList.toggle('open', ui.settingsOpen);
+  if(!ui.settingsOpen) return;
+  const sizeKb = Math.max(1, Math.round(JSON.stringify(db).length / 1024));
+  const persistTxt = persistState === 'granted'
+    ? '<b>yes ✓</b>'
+    : persistState === 'denied'
+      ? '<b>not guaranteed</b> — the browser may clear it if the device runs very low on space. Exporting backups covers that.'
+      : 'checking…';
+  panel.innerHTML = `
+    <div class="settings-block">
+      <h3>Term settings — ${escapeHtml(term.name)}</h3>
+      <div class="settings-row">
+        <div><label>Term start</label><input type="date" data-k="start" value="${term.start}"></div>
+        <div><label>Total class days</label><input type="number" data-k="days" min="1" value="${term.totalClassDays}"></div>
+        <div><label>Unlogged routine classes count as</label>
+          <select data-k="auto">${AUTO_MODES.map(m => `<option value="${m}" ${m === term.autoMode ? 'selected' : ''}>${escapeHtml(autoModeLabel(m))}</option>`).join('')}</select></div>
+      </div>
+      <div class="term-summary">Runs <b>${fmtShort(term.start)}</b> → <b>${fmtShort(info.endIso)}</b> (${term.totalClassDays} class days, Sun–Thu, holidays excluded)</div>
+      <div class="note">Auto-fill only touches days that have <b>already passed</b>. Anything you log yourself (including “Cancelled”) always wins over auto-fill. You can override the setting per subject/teacher on their page.</div>
+      <div style="margin-top:14px;">
+        <label>Holidays</label>
+        <div id="holidayList">${term.holidays.map(h => `
+          <div class="holiday-row">
+            <input type="date" data-k="hol-start" data-hid="${h.id}" value="${h.start}">
+            <span>to</span>
+            <input type="date" data-k="hol-end" data-hid="${h.id}" value="${h.end}">
+            <button class="icon-btn" data-act="hol-del" data-hid="${h.id}" title="Remove">✕</button>
+          </div>`).join('')}</div>
+        <button class="add-holiday" data-act="hol-add">+ add holiday range</button>
+      </div>
+      <div class="btn-row" style="margin-top:14px"><button class="ghost small danger" data-act="term-delete">Delete this term…</button></div>
+    </div>
+
+    <div class="settings-block">
+      <h3>Backup &amp; import</h3>
+      <div class="btn-row">
+        <button class="ghost" data-act="export-all">⬇ Export all terms</button>
+        <button class="ghost" data-act="export-term">⬇ Export this term</button>
+        <button class="ghost" data-act="import">⬆ Import backup / autosave file</button>
+      </div>
+      <div class="note">${db.lastExport ? `Last export: <b>${fmtStamp(db.lastExport)}</b>.` : '<b>You have not exported a backup yet.</b>'}
+        Import reads files from every version of this app, including old autosave files. You choose whether to add them as new terms or replace everything.</div>
+      <label class="check-row"><input type="checkbox" data-k="leave" ${db.settings.autoDownloadOnLeave ? 'checked' : ''}>
+        <span>Download a backup file automatically whenever I leave or minimise the app (only if something changed). Off by default — handy on phones where file autosave isn't possible.</span></label>
+    </div>
+
+    <div class="settings-block">
+      <h3>In-app storage</h3>
+      <div class="note">
+        App database (IndexedDB): ${idbOk ? '<b>working ✓</b>' : '<b>unavailable</b> in this browser'}<br>
+        Second copy in browser storage: ${lsOk ? '<b>working ✓</b>' : '<b>failed</b>'}<br>
+        Protected from automatic cleanup: ${persistTxt}<br>
+        Data size: <b>~${sizeKb} KB</b> · ${db.terms.length} term${db.terms.length === 1 ? '' : 's'}
+      </div>
+      <div class="mini-label">Restore points</div>
+      <div class="note" style="margin-top:0">Snapshots are taken once a day and before imports, restores and deletions.</div>
+      <div class="snap-list" id="snapList"><div class="note">Loading…</div></div>
+    </div>
+
+    <div class="settings-block">
+      <h3>Live autosave file</h3>
+      ${autosaveBlockHtml()}
+    </div>`;
+  fillSnapshots();
+}
+
+async function fillSnapshots(){
+  const el = $('snapList'); if(!el) return;
+  const snaps = await listSnapshots();
+  const el2 = $('snapList'); if(!el2) return;
+  el2.innerHTML = snaps.length
+    ? snaps.map(s => `<div class="snap-row"><span><b>${escapeHtml(s.label)}</b> · ${fmtStamp(s.at)}</span>
+        <button class="ghost small" data-act="snap-restore" data-id="${s.id}">Restore</button></div>`).join('')
+    : `<div class="note">${idbOk ? 'No restore points yet.' : 'Restore points need the in-app database, which this browser does not offer.'}</div>`;
+}
+
+function onSettingsClick(e){
+  const b = e.target.closest('[data-act]'); if(!b) return;
+  const act = b.dataset.act, term = curTerm();
+  if(act === 'hol-add'){
+    const t = todayISO(); term.holidays.push({id:uid(), start:t, end:t}); commit(); render();
+  } else if(act === 'hol-del'){
+    term.holidays = term.holidays.filter(h => h.id !== b.dataset.hid); commit(); render();
+  } else if(act === 'export-all'){ exportAll(); showToast('Backup downloaded ✓'); renderSettings(term, computeTermInfo(term)); }
+  else if(act === 'export-term'){ exportTerm(term); showToast('Term exported ✓'); renderSettings(term, computeTermInfo(term)); }
+  else if(act === 'import'){ $('importFile').click(); }
+  else if(act === 'term-delete'){ deleteTerm(); }
+  else if(act === 'snap-restore'){ restoreSnapshot(Number(b.dataset.id)); }
+  else if(act === 'fs-connect'){ connectAutosave(); }
+  else if(act === 'fs-disconnect'){ detachAutosaveHandle().then(() => { showToast('Autosave file disconnected'); render(); }); }
+  else if(act === 'fs-resume'){
+    fsHandle.requestPermission({mode:'readwrite'}).then(async p => {
+      if(p === 'granted'){ fsState = 'active'; await writeAutosaveFile(); }
+      render();
+    }).catch(() => render());
+  }
+}
+function onSettingsChange(e){
+  const el = e.target, k = el.dataset.k; if(!k) return;
+  const term = curTerm();
+  if(k === 'start'){
+    if(isISO(el.value)){ term.start = el.value; tstate(term).month = null; commit(); }
+  } else if(k === 'days'){
+    const v = parseInt(el.value, 10); if(v > 0){ term.totalClassDays = v; commit(); }
+  } else if(k === 'auto'){
+    term.autoMode = el.value; commit();
+  } else if(k === 'hol-start' || k === 'hol-end'){
+    const h = term.holidays.find(x => x.id === el.dataset.hid);
+    if(h && isISO(el.value)){
+      if(k === 'hol-start'){ h.start = el.value; if(h.end < h.start) h.end = h.start; }
+      else { h.end = el.value; if(h.end < h.start) h.end = h.start; }
+      commit();
+    }
+  } else if(k === 'leave'){
+    db.settings.autoDownloadOnLeave = el.checked; commit();
+  }
+  render();
+}
+
+/* ---------------- subject tabs ---------------- */
+function renderTabs(term, info){
+  const {ent: active} = resolveActive(term, info);
   let html = '';
-  ['course','lab'].forEach(type=>{
-    const items = state.entities.filter(e=>e.type===type);
+  [['course','Courses'], ['lab','Labs']].forEach(([type, label]) => {
+    const items = term.entities.filter(e => e.type === type);
     if(!items.length) return;
-    html += `<div class="tab-group-label">${type==='course'?'Courses':'Labs'}</div>`;
-    items.forEach(e=>{
-      const attVals = e.sections.flatMap(s=>Object.values(s.attendance).flat());
-      const present = attVals.filter(v=>v==='present').length;
-      const total = attVals.filter(v=>v==='present'||v==='absent').length;
-      const pct = total? Math.round((present/total)*100) : null;
-      const pctColor = pct===null ? 'var(--ink-soft)' : (pct<75 ? 'var(--crimson)' : 'var(--green)');
-      html += `<div class="tab ${e.id===state.activeEntityId?'active':''}" data-id="${e.id}">
+    html += `<div class="tab-group-label">${label}</div>`;
+    items.forEach(e => {
+      const s = entityStats(term, info, e);
+      const pctColor = s.pct === null ? 'var(--ink-soft)' : (s.pct < 75 ? 'var(--crimson)' : 'var(--green)');
+      html += `<div class="tab ${active && e.id === active.id ? 'active' : ''}" data-act="tab" data-id="${e.id}">
           <span class="tab-main">
             <span class="dot" style="${dotStyle(e)}"></span>
-            <span>
-              <div class="tab-code">${escapeHtml(e.code)}</div>
-              <div class="tab-name">${escapeHtml(e.name)}</div>
-            </span>
+            <span><div class="tab-code">${escapeHtml(e.code)}</div><div class="tab-name">${escapeHtml(e.name)}</div></span>
           </span>
           <span style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="tab-pct" style="color:${pctColor}">${pct===null?'—':pct+'%'}</span>
-            <button class="tab-del" data-id="${e.id}" title="Delete">✕</button>
+            <span class="tab-pct" style="color:${pctColor}">${s.pct === null ? '—' : s.pct + '%'}</span>
           </span>
         </div>`;
     });
   });
-  tabs.innerHTML = html + `<button class="add-tab" id="addEntityBtn">+ Add subject</button>`;
-
-  tabs.querySelectorAll('.tab').forEach(el=>{
-    el.addEventListener('click', (e)=>{
-      if(e.target.classList.contains('tab-del')) return;
-      const entity = getEntity(el.dataset.id);
-      state.activeEntityId = entity.id;
-      state.activeSectionId = entity.sections[0].id;
-      modalOpen = null;
-      render();
-    });
-  });
-  tabs.querySelectorAll('.tab-del').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      const entity = getEntity(btn.dataset.id);
-      openConfirmModal({
-        title:'Delete subject?',
-        message:`This removes "${entity.code} — ${entity.name}" and all its attendance and marks. This can't be undone.`,
-        confirmLabel:'Delete',
-        onConfirm: async ()=>{
-          state.entities = state.entities.filter(x=>x.id!==entity.id);
-          if(state.activeEntityId===entity.id){
-            state.activeEntityId = state.entities[0]?.id || null;
-            state.activeSectionId = state.entities[0]?.sections[0]?.id || null;
-          }
-          modalOpen = null;
-          await saveState(); render();
-        }
-      });
-    });
-  });
-  document.getElementById('addEntityBtn').addEventListener('click', async ()=>{
-    const code = prompt('Course/Lab code (e.g. BME 3299):'); if(!code) return;
-    const name = prompt('Full name:'); if(!name) return;
-    const isLab = confirm('Is this a Lab? (OK = Lab, Cancel = Course)');
-    const type = isLab ? 'lab' : 'course';
-    const color = FALLBACK_COLORS[state.entities.length % FALLBACK_COLORS.length];
-    const sections = type==='course'
-      ? [{id:uid(), teacherName:'Teacher A', attendance:{}, tests:[]},
-         {id:uid(), teacherName:'Teacher B', attendance:{}, tests:[]}]
-      : [{id:uid(), teacherName:null, attendance:{}, tests:[]}];
-    const ne = {id:uid(), code, name, type, color, colorStyle:'solid', sections};
-    state.entities.push(ne);
-    state.activeEntityId = ne.id;
-    state.activeSectionId = ne.sections[0].id;
-    modalOpen = null;
-    await saveState(); render();
-  });
+  $('tabs').innerHTML = html + `<button class="add-tab" data-act="add-subject">+ Add subject</button>`;
+}
+function onTabsClick(e){
+  const b = e.target.closest('[data-act]'); if(!b) return;
+  const term = curTerm();
+  if(b.dataset.act === 'add-subject'){ addSubject(); return; }
+  const ent = term.entities.find(x => x.id === b.dataset.id); if(!ent) return;
+  if(b.dataset.act === 'tab-del'){ e.stopPropagation(); deleteSubject(ent); return; }
+  const st = tstate(term);
+  st.entityId = ent.id; st.sectionId = ent.sections[0].id;
+  render();
 }
 
-function daysInMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0).getDate(); }
-
-function renderPage(termInfo){
-  const page = document.getElementById('page');
-  const entity = getEntity(state.activeEntityId);
-  if(!entity){
-    page.innerHTML = `<div class="empty-state"><div class="stamp-icon">📋</div><p>No subjects yet. Add one from the left to start your ledger.</p></div>`;
+/* ---------------- main page ---------------- */
+function renderPage(term, info){
+  const page = $('page');
+  const {st, ent, sec} = resolveActive(term, info);
+  if(!ent){
+    page.innerHTML = `<div class="empty-state"><div class="stamp-icon">📋</div>
+      <p>No subjects in this term yet.</p><button class="primary" data-act="add-subject">+ Add a subject</button></div>`;
     return;
   }
-  let section = getSection(entity, state.activeSectionId) || entity.sections[0];
-  state.activeSectionId = section.id;
-
   let html = `<div class="page-head">
       <div>
-        <div class="subject-title"><span class="dot" style="${dotStyle(entity)}"></span>${escapeHtml(entity.code)}</div>
-        <div class="subject-sub">${escapeHtml(entity.name)} · ${entity.type==='course'?'Course':'Lab'}</div>
+        <div class="subject-title"><span class="dot" style="${dotStyle(ent)}"></span>${escapeHtml(ent.code)}
+          <button class="icon-btn" data-act="edit-subject" title="Edit subject" style="font-size:13px">✎</button></div>
+        <div class="subject-sub">${escapeHtml(ent.name)} · ${ent.type === 'course' ? 'Course' : 'Lab'}</div>
       </div>
       <div class="month-nav">
-        <button id="prevMonth">‹</button>
-        <span id="monthLabel"></span>
-        <button id="nextMonth">›</button>
+        <button data-act="prev-month" aria-label="Previous month">‹</button>
+        <span>${parseISO(st.month).toLocaleString('default', {month:'long', year:'numeric'})}</span>
+        <button data-act="next-month" aria-label="Next month">›</button>
       </div>
     </div>`;
-
-  if(entity.type==='course'){
-    html += `<div class="section-pills">` + entity.sections.map(s=>`
-      <div class="pill ${s.id===section.id?'active':''}" data-id="${s.id}">
-        <span>${escapeHtml(s.teacherName)}</span><span class="edit-ic" data-edit="${s.id}">✎</span>
+  if(ent.type === 'course'){
+    html += `<div class="section-pills">` + ent.sections.map(s => `
+      <div class="pill ${s.id === sec.id ? 'active' : ''}" data-act="pill" data-id="${s.id}">
+        <span>${escapeHtml(s.teacherName)}</span><span class="edit-ic" data-act="pill-edit" data-id="${s.id}" title="Rename teacher">✎</span>
       </div>`).join('') + `</div>`;
   }
-
-  html += renderCalendarBlock(section, termInfo);
-  html += renderMarksBlock(section, entity.type==='course');
-
+  html += renderRoutineBox(term, ent, sec);
+  html += renderCalendarBlock(term, info, ent, sec, st);
+  html += renderMarksBlock(term, info, ent, sec);
   page.innerHTML = html;
-  wirePageEvents(entity, section, termInfo);
-  renderDayModal(section);
 }
 
-function renderCalendarBlock(section, termInfo){
-  const y = viewMonth.getFullYear(), m = viewMonth.getMonth();
-  const firstDow = new Date(y,m,1).getDay();
-  const totalDays = daysInMonth(viewMonth);
-  const today = todayISO();
+function renderRoutineBox(term, ent, sec){
+  const sum = routineSummary(sec);
+  const termMode = autoModeLabel(term.autoMode);
+  return `<div class="routine-box">
+      <div class="rb-left">
+        <span><b>Routine:</b> ${sum ? escapeHtml(sum) : 'not set yet'}</span>
+        <span>${sum ? 'Classes in the routine are filled in automatically for days that have passed.' : 'Add a routine to have attendance filled in automatically.'}</span>
+      </div>
+      <div class="rb-right">
+        <label style="font-size:11px">If I don't log a class:</label>
+        <select class="auto-select" data-act="sec-auto">
+          <option value="" ${!sec.autoMode ? 'selected' : ''}>Term setting (${escapeHtml(termMode)})</option>
+          ${AUTO_MODES.map(m => `<option value="${m}" ${sec.autoMode === m ? 'selected' : ''}>${escapeHtml(autoModeLabel(m))}</option>`).join('')}
+        </select>
+        <button class="ghost small" data-act="edit-routine">🗓 Edit routine</button>
+      </div>
+    </div>`;
+}
 
-  let cellsHtml = '';
-  ['S','M','T','W','T','F','S'].forEach(d=> cellsHtml += `<div class="cal-dow">${d}</div>`);
-  for(let i=0;i<firstDow;i++) cellsHtml += `<div class="cal-cell blank"></div>`;
-  for(let day=1; day<=totalDays; day++){
-    const iso = isoDate(y,m,day);
-    const dow = new Date(y,m,day).getDay();
-    const isWeekend = dow===5||dow===6;
-    const isHoliday = termInfo.holidaySet.has(iso);
-    const blockedOff = isWeekend || isHoliday;
-    const outsideTerm = iso < state.term.start || iso > termInfo.endIso;
-    const enabled = !blockedOff;
-    const entries = section.attendance[iso] || [];
-
-    let stampHtml = '';
-    if(entries.length===1){
-      const st = entries[0];
-      const label = st==='present'?'P':st==='absent'?'A':'C';
-      stampHtml = `<span class="stamp ${st}">${label}</span>`;
-    } else if(entries.length>1){
-      stampHtml = `<div class="multi-stamp">${entries.map(st=>`<span class="mini-dot ${st}"></span>`).join('')}</div>`;
+function renderCalendarBlock(term, info, ent, sec, st){
+  const [y, m] = st.month.split('-').map(Number);
+  const firstDow = new Date(y, m-1, 1).getDay();
+  const totalDays = new Date(y, m, 0).getDate();
+  let cells = '';
+  ['S','M','T','W','T','F','S'].forEach(d => cells += `<div class="cal-dow">${d}</div>`);
+  for(let i = 0; i < firstDow; i++) cells += `<div class="cal-cell blank"></div>`;
+  for(let day = 1; day <= totalDays; day++){
+    const iso = isoDate(y, m-1, day);
+    const di = dayInfo(term, info, sec, iso);
+    let inner = '';
+    if(di.list.length === 1){
+      const it = di.list[0];
+      inner = `<span class="stamp ${it.s} ${it.auto ? 'auto' : ''}">${it.s === 'present' ? 'P' : it.s === 'absent' ? 'A' : 'C'}</span>`;
+    } else if(di.list.length > 1){
+      inner = `<div class="multi-stamp">${di.list.map(it => `<span class="mini-dot ${it.s} ${it.auto ? 'auto' : ''}"></span>`).join('')}</div>`;
     }
-
-    const classes = ['cal-cell'];
-    if(blockedOff) classes.push('blocked-off');
-    if(outsideTerm && !blockedOff) classes.push('outside-term');
-    cellsHtml += `<div class="${classes.join(' ')}" ${enabled?`data-date="${iso}"`:''}>
-        <span class="num">${day}</span>${stampHtml}
-      </div>`;
+    if(!di.list.length && di.N > 0){
+      inner += `<div class="sched-dots">${di.slots.map(() => '<span class="sched-dot"></span>').join('')}</div>`;
+    }
+    const cls = ['cal-cell'];
+    if(di.blocked) cls.push('blocked-off');
+    else if(iso < term.start || iso > info.endIso) cls.push('outside-term');
+    if(iso === info.today) cls.push('today');
+    cells += `<div class="${cls.join(' ')}" ${di.blocked ? '' : `data-act="cell" data-date="${iso}"`}><span class="num">${day}</span>${inner}</div>`;
   }
-
-  const att = computeSectionAttendance(section);
-  const barPct = att.pct===null?0:att.pct;
-  const low = att.pct!==null && att.pct<75;
-
+  const s = sectionStats(term, info, sec);
+  const low = s.pct !== null && s.pct < 75;
+  const hasRoutine = sec.routine.length > 0;
   return `
     <div class="section-label">Attendance</div>
     <div class="attendance-bar-wrap">
-      <span>${att.total? att.present+' / '+att.total+' held classes' : 'No records yet'}${att.cancelled?` · ${att.cancelled} cancelled`:''}</span>
-      <div class="attendance-bar ${low?'low':''}"><div style="width:${barPct}%"></div></div>
-      <span>${att.pct!==null? att.pct+'%' : '—'}</span>
+      <span>${s.total ? `${s.present} / ${s.total} held classes` : 'No classes counted yet'}${s.auto ? ` · ${s.auto} auto-filled` : ''}${s.cancelled ? ` · ${s.cancelled} cancelled` : ''}</span>
+      <div class="attendance-bar ${low ? 'low' : ''}"><div style="width:${s.pct === null ? 0 : s.pct}%"></div></div>
+      <span>${s.pct !== null ? s.pct + '%' : '—'}</span>
     </div>
-    <div class="cal-grid">${cellsHtml}</div>
+    <div class="cal-grid">${cells}</div>
     <div class="cal-legend">
       <span><span class="leg-dot" style="background:var(--green)"></span>Present</span>
       <span><span class="leg-dot" style="background:var(--crimson)"></span>Absent</span>
       <span><span class="leg-dot" style="background:var(--gray)"></span>Cancelled</span>
       <span><span class="leg-dot" style="background:var(--crimson);opacity:0.55"></span>Weekend / Holiday</span>
-      <div class="leg-note">Tap a weekday to log a class — tap it again anytime to add another entry for that day (extra or makeup classes).</div>
-    </div>
-  `;
-}
-
-function openDayModal(date){ modalOpen = {date}; render(); }
-function closeDayModal(){ modalOpen = null; render(); }
-
-function renderDayModal(section){
-  const root = document.getElementById('dayModalRoot');
-  if(!modalOpen){ root.innerHTML=''; return; }
-  const date = modalOpen.date;
-  const entries = section.attendance[date] || [];
-  const [yy,mm,dd] = date.split('-').map(Number);
-  const label = new Date(yy,mm-1,dd).toLocaleDateString('default',{weekday:'long', month:'long', day:'numeric'});
-  const dotColor = st => st==='present' ? 'var(--green)' : st==='absent' ? 'var(--crimson)' : 'var(--gray)';
-
-  root.innerHTML = `
-    <div class="modal-overlay" id="modalOverlay">
-      <div class="modal-card">
-        <h4>${label}</h4>
-        <div class="modal-sub">${entries.length? entries.length+' class'+(entries.length>1?'es':'')+' logged today' : 'No classes logged yet'}</div>
-        ${entries.length? `<div class="modal-entries">${entries.map((st,idx)=>`
-            <div class="modal-entry">
-              <span class="modal-entry-status"><span class="modal-entry-dot" style="background:${dotColor(st)}"></span>${st.charAt(0).toUpperCase()+st.slice(1)}</span>
-              <button class="icon-btn" data-idx="${idx}" data-action="remove" title="Remove">✕</button>
-            </div>`).join('')}</div>` : ''}
-        <div class="modal-add-row">
-          <button class="modal-add-btn present" data-action="add" data-status="present">+ Present</button>
-          <button class="modal-add-btn absent" data-action="add" data-status="absent">+ Absent</button>
-          <button class="modal-add-btn cancelled" data-action="add" data-status="cancelled">+ Cancelled</button>
-        </div>
-        <button class="ghost modal-close" id="modalCloseBtn">Close</button>
-      </div>
+      ${hasRoutine ? `<span><span class="leg-dot" style="border:1.5px dashed var(--green)"></span>Dashed = auto-filled from routine</span>` : ''}
     </div>`;
-
-  document.getElementById('modalOverlay').addEventListener('click', (e)=>{
-    if(e.target.id==='modalOverlay') closeDayModal();
-  });
-  document.getElementById('modalCloseBtn').addEventListener('click', closeDayModal);
-  root.querySelectorAll('[data-action="add"]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      if(!section.attendance[date]) section.attendance[date] = [];
-      section.attendance[date].push(btn.dataset.status);
-      await saveState(); render();
-    });
-  });
-  root.querySelectorAll('[data-action="remove"]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const idx = parseInt(btn.dataset.idx,10);
-      section.attendance[date].splice(idx,1);
-      if(section.attendance[date].length===0) delete section.attendance[date];
-      await saveState(); render();
-    });
-  });
 }
 
-function gradeColor(pct){
-  if(pct>=80) return 'var(--green)';
-  if(pct>=60) return 'var(--gold)';
-  return 'var(--crimson)';
-}
-
-function renderMarksBlock(section, isCourse){
-  const marks = computeSectionMarks(section);
+function renderMarksBlock(term, info, ent, sec){
+  const isCourse = ent.type === 'course';
   const cap = isCourse ? 30 : null;
+  const ms = sectionMarks(sec);
+  const today = info.today;
   let capBlock = '';
   if(cap){
-    const capPct = Math.min(150, Math.round((marks.sumMax/cap)*100));
-    const over = marks.sumMax > cap;
+    const over = ms.sumMaxAll > cap;
     capBlock = `<div class="marks-cap-wrap">
-        CT weight recorded: <b>${marks.sumMax} / ${cap}</b> marks ${over?'<span style="color:var(--crimson)">(over cap!)</span>':''}
-        <div class="marks-cap-bar ${over?'over':''}"><div style="width:${Math.min(100,capPct)}%"></div></div>
+        CT weight planned: <b>${ms.sumMaxAll} / ${cap}</b> marks${over ? ' <span style="color:var(--crimson)">(over the cap!)</span>' : ''}
+        ${ms.sumMaxPub ? ` · scored <b>${ms.scored} / ${ms.sumMaxPub}</b> so far (${ms.avgPct}%)` : ''}${ms.pending ? ` · <b>${ms.pending}</b> awaiting marks` : ''}
+        <div class="marks-cap-bar ${over ? 'over' : ''}"><div style="width:${Math.min(100, Math.round(ms.sumMaxAll / cap * 100))}%"></div></div>
       </div>`;
+  } else if(sec.tests.length){
+    capBlock = `<div class="marks-cap-wrap">${ms.sumMaxPub ? `Scored <b>${ms.scored} / ${ms.sumMaxPub}</b> (${ms.avgPct}%)` : 'No marks published yet'}${ms.pending ? ` · <b>${ms.pending}</b> awaiting marks` : ''}</div>`;
   }
-  let tableHtml;
-  if(!section.tests.length){
-    tableHtml = `<p style="color:var(--ink-soft);font-size:13px;margin:0 0 6px;">No tests logged yet.</p>`;
+  let table;
+  if(!sec.tests.length){
+    table = `<p style="color:var(--ink-soft);font-size:13px;margin:0 0 6px;">No CTs logged yet. Log a CT as soon as it's announced or held — marks can come later.</p>`;
   } else {
-    const sorted = [...section.tests].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
-    tableHtml = `<table class="test-table"><thead><tr><th>Test</th><th>Date</th><th>Marks</th><th>%</th><th></th></tr></thead><tbody>` +
-      sorted.map(t=>{
-        const pct = Math.round((t.marks/t.max)*100);
+    const sorted = sec.tests.slice().sort((a,b) => (a.date || '9999').localeCompare(b.date || '9999') || a.name.localeCompare(b.name));
+    table = `<div class="table-scroll"><table class="test-table"><thead><tr><th>CT</th><th>Date</th><th>Marks</th><th>Result</th><th></th></tr></thead><tbody>` +
+      sorted.map(t => {
+        const editing = ui.ctEdit === t.id;
+        let marksCell, result;
+        if(t.marks === null || editing){
+          marksCell = `<input class="marks-input" type="number" step="any" min="0" data-id="${t.id}" value="${t.marks === null ? '' : t.marks}" placeholder="marks"> / ${t.max}
+            <button class="mini-save" data-act="ct-save" data-id="${t.id}">Save</button>
+            ${editing ? `<button class="link-btn" data-act="ct-cancel">cancel</button>${t.marks !== null ? `<button class="link-btn" data-act="ct-clear" data-id="${t.id}">clear marks</button>` : ''}` : ''}`;
+        } else {
+          marksCell = `${t.marks} / ${t.max} <button class="icon-btn" data-act="ct-edit" data-id="${t.id}" title="Edit marks">✎</button>`;
+        }
+        if(t.marks !== null){
+          const pct = Math.round(t.marks / t.max * 100);
+          result = `<span class="grade-pill" style="background:${gradeColor(pct)}22;color:${gradeColor(pct)}">${pct}%</span>`;
+        } else if(t.date && t.date > today){
+          result = `<span class="state-pill upcoming">Upcoming</span>`;
+        } else {
+          result = `<span class="state-pill pending">Marks pending</span>`;
+        }
         return `<tr>
-          <td>${escapeHtml(t.name)}</td>
-          <td>${t.date||'—'}</td>
-          <td>${t.marks} / ${t.max}</td>
-          <td><span class="grade-pill" style="background:${gradeColor(pct)}22; color:${gradeColor(pct)}">${pct}%</span></td>
-          <td><button class="del-row" data-id="${t.id}" title="Delete">✕</button></td>
+          <td>${escapeHtml(t.name)} <button class="icon-btn" data-act="ct-meta" data-id="${t.id}" title="Edit name, date or total" style="font-size:12px">✎</button></td>
+          <td>${t.date ? fmtShort(t.date) : '—'}</td>
+          <td class="marks-cell">${marksCell}</td>
+          <td>${result}</td>
+          <td><button class="del-row" data-act="ct-del" data-id="${t.id}" title="Delete CT">✕</button></td>
         </tr>`;
-      }).join('') + `</tbody></table>`;
+      }).join('') + `</tbody></table></div>`;
   }
+  const remaining = cap ? cap - ms.sumMaxAll : null;
+  const defMax = isCourse ? (ms.sumMaxAll === 0 ? 20 : (remaining > 0 ? Math.min(remaining, 20) : 10)) : '';
   return `
-    <div class="section-label">${isCourse?'Class Test Marks':'Marks / Assessments'}</div>
+    <div class="section-label">${isCourse ? 'Class Tests' : 'Lab Assessments'}</div>
     ${capBlock}
-    ${tableHtml}
+    ${table}
     <form class="add-form" id="addTestForm">
-      <div class="field"><label>Test name</label><input class="wide" id="testName" placeholder="e.g. CT 1" required/></div>
-      <div class="field"><label>Marks</label><input id="testMarks" type="number" step="any" min="0" placeholder="0" required style="width:65px"/></div>
-      <div class="field"><label>Out of</label><input id="testMax" type="number" step="any" min="0.1" placeholder="20" required style="width:65px"/></div>
-      <div class="field"><label>Date</label><input id="testDate" type="date" value="${todayISO()}"/></div>
-      <button type="submit" class="primary">Add</button>
+      <div class="field"><label>Name</label><input class="wide" name="name" value="CT ${sec.tests.length + 1}" required></div>
+      <div class="field"><label>Date</label><input name="date" type="date" value="${today}"></div>
+      <div class="field"><label>Out of</label><input name="max" type="number" step="any" min="0.1" value="${defMax}" required style="width:70px"></div>
+      <div class="field"><label>Marks (optional)</label><input name="marks" type="number" step="any" min="0" placeholder="not out yet" style="width:110px"></div>
+      <button type="submit" class="primary">Log CT</button>
     </form>
-  `;
+    <p class="hint-inline">Log the CT when it's announced or held — leave marks empty and fill them in here once they're published.</p>`;
 }
 
-function wirePageEvents(entity, section, termInfo){
-  document.getElementById('monthLabel').textContent = viewMonth.toLocaleString('default',{month:'long',year:'numeric'});
-  document.getElementById('prevMonth').addEventListener('click', ()=>{ viewMonth.setMonth(viewMonth.getMonth()-1); modalOpen=null; render(); });
-  document.getElementById('nextMonth').addEventListener('click', ()=>{ viewMonth.setMonth(viewMonth.getMonth()+1); modalOpen=null; render(); });
-
-  document.querySelectorAll('.pill').forEach(p=>{
-    p.addEventListener('click', async (e)=>{
-      if(e.target.dataset.edit){
-        const s = getSection(entity, e.target.dataset.edit);
-        const name = prompt('Teacher name:', s.teacherName);
-        if(name){ s.teacherName = name; await saveState(); render(); }
-        return;
-      }
-      state.activeSectionId = p.dataset.id;
-      modalOpen = null;
-      render();
-    });
-  });
-
-  document.querySelectorAll('.cal-cell[data-date]').forEach(cell=>{
-    cell.addEventListener('click', ()=>{
-      openDayModal(cell.dataset.date);
-    });
-  });
-
-  const form = document.getElementById('addTestForm');
-  form.addEventListener('submit', async (e)=>{
+/* ---------------- page events (delegated) ---------------- */
+function activeCtx(){
+  const term = curTerm(), info = computeTermInfo(term);
+  const {st, ent, sec} = resolveActive(term, info);
+  return {term, info, st, ent, sec};
+}
+function shiftMonth(st, delta){
+  const d = parseISO(st.month); d.setMonth(d.getMonth() + delta); d.setDate(1); st.month = dateToISO(d);
+}
+async function onPageClick(e){
+  const b = e.target.closest('[data-act]'); if(!b) return;
+  const act = b.dataset.act;
+  if(act === 'sec-auto') return;
+  const {term, info, st, ent, sec} = activeCtx();
+  if(act === 'add-subject'){ addSubject(); return; }
+  if(!ent) return;
+  if(act === 'prev-month'){ shiftMonth(st, -1); render(); }
+  else if(act === 'next-month'){ shiftMonth(st, 1); render(); }
+  else if(act === 'pill'){ st.sectionId = b.dataset.id; render(); }
+  else if(act === 'pill-edit'){
+    e.stopPropagation();
+    const s = ent.sections.find(x => x.id === b.dataset.id);
+    const r = await askForm({title:'Teacher name', fields:[{id:'name', label:'Name', type:'text', value:s.teacherName, required:true}]});
+    if(r){ s.teacherName = r.name; commit(); render(); }
+  }
+  else if(act === 'cell'){ openModal(dayModalSpec(term.id, ent.id, sec.id, b.dataset.date)); }
+  else if(act === 'edit-routine'){ openModal(routineModalSpec()); }
+  else if(act === 'edit-subject'){ editSubject(ent); }
+  else if(act === 'ct-edit'){ ui.ctEdit = b.dataset.id; render(); }
+  else if(act === 'ct-cancel'){ ui.ctEdit = null; render(); }
+  else if(act === 'ct-clear'){
+    const t = sec.tests.find(x => x.id === b.dataset.id); t.marks = null; ui.ctEdit = null; commit(); render(); showToast('Marks cleared — back to pending');
+  }
+  else if(act === 'ct-save'){
+    const t = sec.tests.find(x => x.id === b.dataset.id);
+    const inp = $('page').querySelector(`.marks-input[data-id="${t.id}"]`);
+    saveCtMarks(t, inp);
+  }
+  else if(act === 'ct-meta'){
+    const t = sec.tests.find(x => x.id === b.dataset.id);
+    const r = await askForm({title:'Edit CT', fields:[
+      {id:'name', label:'Name', type:'text', value:t.name, required:true},
+      {id:'date', label:'Date', type:'date', value:t.date},
+      {id:'max', label:'Out of', type:'number', value:t.max, step:'any', min:0.1, required:true,
+        validate:v => (Number(v.max) > 0 ? (t.marks !== null && t.marks > Number(v.max) ? 'The published marks are higher than that total' : null) : 'Enter a total above 0')}
+    ]});
+    if(r){ t.name = r.name; t.date = isISO(r.date) ? r.date : ''; t.max = Number(r.max); commit(); render(); }
+  }
+  else if(act === 'ct-del'){
+    const t = sec.tests.find(x => x.id === b.dataset.id);
+    const ok = await askConfirm({title:'Delete this CT?', message:`“${t.name}” ${t.marks !== null ? 'and its marks' : ''} will be removed.`, confirmLabel:'Delete', danger:true});
+    if(ok){ sec.tests = sec.tests.filter(x => x.id !== t.id); commit(); render(); }
+  }
+}
+function saveCtMarks(t, inp){
+  const v = inp.value.trim();
+  if(v === ''){ showToast('Type the marks first, or leave the CT as pending'); return; }
+  const n = Number(v);
+  if(!Number.isFinite(n) || n < 0){ showToast('Enter a valid mark'); return; }
+  if(n > t.max){ showToast(`Marks can't be above ${t.max}. Edit the CT's total first if that's wrong.`); return; }
+  t.marks = n; ui.ctEdit = null; commit(); render(); showToast('Marks saved ✓');
+}
+function onPageChange(e){
+  const el = e.target;
+  if(el.dataset && el.dataset.act === 'sec-auto'){
+    const {sec} = activeCtx();
+    sec.autoMode = el.value || null; commit(); render();
+  }
+}
+function onPageSubmit(e){
+  if(e.target.id !== 'addTestForm') return;
+  e.preventDefault();
+  const {sec} = activeCtx();
+  const f = e.target;
+  const name = f.elements.name.value.trim() || `CT ${sec.tests.length + 1}`;
+  const max = Number(f.elements.max.value);
+  if(!(max > 0)){ showToast('Enter what the CT is out of'); return; }
+  const rawMarks = f.elements.marks.value.trim();
+  let marks = null;
+  if(rawMarks !== ''){
+    marks = Number(rawMarks);
+    if(!Number.isFinite(marks) || marks < 0){ showToast('Enter a valid mark'); return; }
+    if(marks > max){ showToast(`Marks can't be above ${max}`); return; }
+  }
+  const date = isISO(f.elements.date.value) ? f.elements.date.value : '';
+  sec.tests.push({id:uid(), name, max, date, marks});
+  commit(); render();
+  showToast(marks === null ? 'CT logged — marks pending' : 'CT logged ✓');
+}
+function onPageKeydown(e){
+  if(e.key === 'Enter' && e.target.classList && e.target.classList.contains('marks-input')){
     e.preventDefault();
-    const name = document.getElementById('testName').value.trim();
-    const marks = parseFloat(document.getElementById('testMarks').value);
-    const max = parseFloat(document.getElementById('testMax').value);
-    const date = document.getElementById('testDate').value;
-    if(!name || isNaN(marks) || isNaN(max) || max<=0) return;
-    section.tests.push({id:uid(), name, marks, max, date});
-    await saveState(); showToast('Test added ✓'); render();
-  });
+    const {sec} = activeCtx();
+    const t = sec.tests.find(x => x.id === e.target.dataset.id);
+    if(t) saveCtMarks(t, e.target);
+  }
+}
 
-  document.querySelectorAll('.del-row').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      section.tests = section.tests.filter(t=>t.id!==btn.dataset.id);
-      await saveState(); render();
+/* ---------------- day modal (attendance for one date) ---------------- */
+function dayModalSpec(termId, entId, secId, date){
+  const lookup = () => {
+    const term = db.terms.find(t => t.id === termId);
+    const ent = term && term.entities.find(e => e.id === entId);
+    const sec = ent && ent.sections.find(s => s.id === secId);
+    return term && ent && sec ? {term, ent, sec} : null;
+  };
+  const chip = (status, auto) => status
+    ? `<span class="status-chip ${status} ${auto ? 'auto' : ''}">${status[0].toUpperCase() + status.slice(1)}${auto ? ' · auto' : ''}</span>`
+    : `<span class="status-chip none">Not counted yet</span>`;
+  const seg = (attr, current) => `<div class="seg">${STATUSES.map(s =>
+    `<button type="button" class="${s} ${current === s ? 'on' : ''}" ${attr} data-s="${s}"><span>${s[0].toUpperCase() + s.slice(1)}</span></button>`).join('')}</div>`;
+  return {
+    live:true, cls:'mid',
+    render:() => {
+      const c = lookup(); if(!c){ return `<h4>Not found</h4><div class="modal-sub">This subject no longer exists.</div>`; }
+      const info = computeTermInfo(c.term);
+      const di = dayInfo(c.term, info, c.sec, date);
+      const label = c.ent.type === 'course' ? `${c.ent.code} · ${c.sec.teacherName}` : `${c.ent.code} (Lab)`;
+      let body = '';
+      if(di.N){
+        body += `<div class="mini-label">From the routine</div>`;
+        body += di.slots.map((r, i) => `<div class="slot-row">
+            <div class="slot-top"><span class="slot-name">Class ${i + 1}${r.time ? ' · ' + escapeHtml(r.time) : ''}</span>
+              <span class="slot-status">${chip(r.status, r.auto)}</span></div>
+            ${seg(`data-act="slot" data-rid="${r.id}"`, r.explicit ? r.status : null)}
+            ${r.explicit ? `<div style="margin-top:6px;text-align:right"><button type="button" class="link-btn" data-act="slot-clear" data-rid="${r.id}">${di.autoOk ? 'reset to auto' : 'clear'}</button></div>` : ''}
+          </div>`).join('');
+        body += di.autoOk
+          ? `<div class="modal-sub" style="margin-top:-2px">Unlogged classes count as <b>${autoModeLabel(di.mode)}</b>. Tap a status to override.</div>`
+          : `<div class="modal-sub" style="margin-top:-2px">${di.mode === 'off' ? 'Auto-fill is off for this subject.' : 'Auto-fill applies once the day has passed — log it yourself if you want it counted now.'}</div>`;
+      }
+      if(di.others.length){
+        body += `<div class="mini-label">${di.N ? 'Extra / other entries' : 'Logged'}</div><div class="modal-entries">` +
+          di.others.map(o => `<div class="modal-entry"><span class="modal-entry-status">${chip(o.s, false)}${o.extra ? '<span style="font-size:11px;color:var(--ink-soft)">extra class</span>' : ''}</span>
+            <button type="button" class="icon-btn" data-act="other-del" data-idx="${o.idx}" title="Remove">✕</button></div>`).join('') + `</div>`;
+      }
+      body += `<div class="mini-label">${di.N ? 'Add an extra class' : (c.sec.routine.length ? 'Add an extra class (none scheduled today)' : 'Log a class')}</div>${seg('data-act="extra"', null)}`;
+      return `<h4>${escapeHtml(fmtLong(date))}</h4><div class="modal-sub">${escapeHtml(label)}</div>${body}
+        <div class="modal-actions" style="margin-top:14px"><button class="ghost" data-act="close">Done</button></div>`;
+    },
+    wire:root => {
+      root.querySelector('.modal-card').addEventListener('click', ev => {
+        const b = ev.target.closest('[data-act]'); if(!b) return;
+        const c = lookup(); if(!c) return;
+        const act = b.dataset.act;
+        if(act === 'close'){ closeModal(); return; }
+        const info = computeTermInfo(c.term);
+        const di = dayInfo(c.term, info, c.sec, date);
+        const arr = c.sec.attendance[date] || (c.sec.attendance[date] = []);
+        if(act === 'slot'){
+          const r = di.slots.find(x => x.id === b.dataset.rid);
+          const entry = {s:b.dataset.s, rid:r.id};
+          if(r.entryIdx !== null) arr[r.entryIdx] = entry; else arr.push(entry);
+        } else if(act === 'slot-clear'){
+          const r = di.slots.find(x => x.id === b.dataset.rid);
+          if(r && r.entryIdx !== null) arr.splice(r.entryIdx, 1);
+        } else if(act === 'extra'){
+          arr.push({s:b.dataset.s, x:true});
+        } else if(act === 'other-del'){
+          arr.splice(Number(b.dataset.idx), 1);
+        }
+        if(!arr.length) delete c.sec.attendance[date];
+        commit(); render();
+      });
+    }
+  };
+}
+
+/* ---------------- routine editor ---------------- */
+function routineModalSpec(){
+  return {
+    live:true, cls:'wide',
+    render:() => {
+      const term = curTerm();
+      const secs = listSections(term);
+      if(!secs.length) return `<h4>Weekly routine</h4><div class="modal-sub">Add some subjects first.</div><div class="modal-actions"><button class="ghost" data-act="close">Close</button></div>`;
+      const total = secs.reduce((a, x) => a + x.sec.routine.length, 0);
+      const days = WORK_DAYS.map(dow => {
+        const slots = [];
+        secs.forEach(({ent, sec}) => sec.routine.filter(r => r.dow === dow).forEach(r => slots.push({ent, sec, r})));
+        slots.sort((a, b) => byTime(a.r, b.r));
+        const selId = ui.routineSel[dow] || secs[0].sec.id;
+        return `<div class="rt-day"><h5>${DOW_LONG[dow]}</h5>
+          <div class="rt-chips">${slots.length ? slots.map(({ent, sec, r}) => `
+            <span class="rt-chip"><span class="dot" style="${dotStyle(ent)}"></span>${r.time ? `<span class="t">${escapeHtml(r.time)}</span>` : ''}${escapeHtml(sectionLabel(ent, sec))}
+              <button class="icon-btn" data-act="rt-del" data-sid="${sec.id}" data-rid="${r.id}" title="Remove">✕</button></span>`).join('') : `<span class="rt-empty">No classes yet</span>`}</div>
+          <div class="rt-add">
+            <select data-dow="${dow}" data-role="rt-sel">${secs.map(({ent, sec}) =>
+              `<option value="${sec.id}" ${sec.id === selId ? 'selected' : ''}>${escapeHtml(sectionLabel(ent, sec))}</option>`).join('')}</select>
+            <input type="text" data-dow="${dow}" data-role="rt-time" placeholder="time (optional)" value="${escapeHtml(ui.routineTime[dow] || '')}">
+            <button class="ghost small" data-act="rt-add" data-dow="${dow}">+ Add</button>
+          </div>
+        </div>`;
+      }).join('');
+      return `<h4>Weekly routine</h4>
+        <div class="modal-sub">Add each class to the day it normally happens (Sunday–Thursday). ${total} weekly slot${total === 1 ? '' : 's'} so far. Past days are then filled in automatically; you only log the exceptions — cancellations, absences and extra classes. Changing the routine later re-computes auto-filled days, never the ones you logged.</div>
+        ${days}
+        <div class="modal-actions"><button class="primary" data-act="close">Done</button></div>`;
+    },
+    wire:root => {
+      const card = root.querySelector('.modal-card');
+      card.addEventListener('change', e => {
+        if(e.target.dataset.role === 'rt-sel') ui.routineSel[e.target.dataset.dow] = e.target.value;
+      });
+      card.addEventListener('input', e => {
+        if(e.target.dataset.role === 'rt-time') ui.routineTime[e.target.dataset.dow] = e.target.value;
+      });
+      card.addEventListener('click', e => {
+        const b = e.target.closest('[data-act]'); if(!b) return;
+        const term = curTerm();
+        if(b.dataset.act === 'close'){ closeModal(); return; }
+        if(b.dataset.act === 'rt-add'){
+          const dow = Number(b.dataset.dow);
+          const selEl = card.querySelector(`select[data-dow="${dow}"]`);
+          const timeEl = card.querySelector(`input[data-dow="${dow}"]`);
+          const target = listSections(term).find(x => x.sec.id === selEl.value);
+          if(!target) return;
+          target.sec.routine.push({id:uid(), dow, time:timeEl.value.trim().slice(0, 20)});
+          ui.routineSel[dow] = selEl.value; ui.routineTime[dow] = '';
+          commit(); render();
+        } else if(b.dataset.act === 'rt-del'){
+          const target = listSections(term).find(x => x.sec.id === b.dataset.sid);
+          if(target){ target.sec.routine = target.sec.routine.filter(r => r.id !== b.dataset.rid); commit(); render(); }
+        }
+      });
+    }
+  };
+}
+
+/* ---------------- subjects ---------------- */
+async function addSubject(){
+  const term = curTerm();
+  const used = new Set(term.entities.map(e => e.color));
+  const freeColor = PALETTE.find(c => !used.has(c)) || PALETTE[term.entities.length % PALETTE.length];
+  const r = await askForm({
+    title:'Add subject',
+    sub:'A course gets two teacher tabs (each with their own attendance and CTs). A lab gets one.',
+    fields:[
+      {id:'code', label:'Course code', type:'text', value:'', placeholder:'e.g. BME 4101', required:true},
+      {id:'name', label:'Course name', type:'text', value:'', placeholder:'e.g. Biomedical Signal Processing', required:true},
+      {id:'type', label:'Type', type:'select', value:'course', options:[{value:'course', label:'Course (2 teachers)'}, {value:'lab', label:'Lab (1 section)'}]},
+      {id:'color', label:'Colour', type:'swatches', value:freeColor},
+    ],
+    submitLabel:'Add subject'
+  });
+  if(!r) return;
+  const ent = makeEntity({code:r.code, name:r.name, type:r.type, color:r.color});
+  term.entities.push(ent);
+  const st = tstate(term); st.entityId = ent.id; st.sectionId = ent.sections[0].id;
+  commit(); render(); showToast('Subject added ✓');
+}
+async function editSubject(ent){
+  const r = await askForm({
+    title:'Edit subject',
+    fields:[
+      {id:'code', label:'Course code', type:'text', value:ent.code, required:true},
+      {id:'name', label:'Course name', type:'text', value:ent.name, required:true},
+      {id:'color', label:'Colour', type:'swatches', value:PALETTE.includes(ent.color) ? ent.color : PALETTE[0]},
+    ],
+    extraButtons:[{label:'Delete subject', act:'delete', cls:'danger'}]
+  });
+  if(!r) return;
+  if(r.__action === 'delete'){ deleteSubject(ent); return; }
+  ent.code = r.code; ent.name = r.name; ent.color = r.color;
+  commit(); render();
+}
+async function deleteSubject(ent){
+  const ok = await askConfirm({
+    title:'Delete subject?',
+    message:`This removes “${ent.code} — ${ent.name}” with all its attendance, routine and CT marks. A restore point is saved first.`,
+    confirmLabel:'Delete', danger:true
+  });
+  if(!ok) return;
+  await addSnapshot(`Before deleting ${ent.code}`);
+  const term = curTerm();
+  term.entities = term.entities.filter(x => x.id !== ent.id);
+  commit(); render(); showToast('Subject deleted');
+}
+
+/* ---------------- terms ---------------- */
+async function newTerm(){
+  const cur = curTerm();
+  const r = await askForm({
+    title:'New term',
+    sub:'Each term keeps its own subjects, routine, holidays, attendance and CTs.',
+    fields:[
+      {id:'name', label:'Term name', type:'text', value:'', placeholder:'e.g. 3rd Year 2nd Term', required:true},
+      {id:'start', label:'First day of term', type:'date', value:nextSundayISO(), required:true,
+        validate:v => isISO(v.start) ? null : 'Pick a start date'},
+      {id:'days', label:'Total class days', type:'number', value:'65', min:1, required:true,
+        hint:'Counted Sunday–Thursday, excluding holidays you add later.',
+        validate:v => parseInt(v.days, 10) > 0 ? null : 'Enter the number of class days'},
+      {id:'copy', label:'Subjects', type:'select', value:'none', options:[
+        {value:'none', label:'Start empty — I\'ll add them'},
+        {value:'subjects', label:`Copy subjects & teachers from “${cur.name}”`},
+        {value:'routine', label:'Copy subjects, teachers & routine'}]},
+    ],
+    submitLabel:'Create term'
+  });
+  if(!r) return;
+  const t = makeTerm({name:r.name, start:r.start, totalClassDays:parseInt(r.days, 10), holidays:[], entities:[], autoMode:cur.autoMode});
+  if(r.copy !== 'none'){
+    t.entities = cur.entities.map(e => ({
+      id:uid(), code:e.code, name:e.name, type:e.type, color:e.color, colorStyle:e.colorStyle,
+      sections: e.sections.map(s => ({
+        id:uid(), teacherName:s.teacherName, autoMode:s.autoMode, attendance:{}, tests:[],
+        routine: r.copy === 'routine' ? s.routine.map(x => ({id:uid(), dow:x.dow, time:x.time})) : []
+      }))
+    }));
+  }
+  db.terms.push(t);
+  db.activeTermId = t.id;
+  ui.settingsOpen = true;
+  commit(); render();
+  showToast('Term created — add its holidays in ⚙');
+}
+async function deleteTerm(){
+  if(db.terms.length <= 1){ showToast('Keep at least one term — add another before deleting this one'); return; }
+  const term = curTerm();
+  const ok = await askConfirm({
+    title:'Delete this term?',
+    message:`“${term.name}” and everything in it (attendance, routine, CTs) will be removed. A restore point is saved first, so you can undo this from Settings.`,
+    confirmLabel:'Delete term', danger:true
+  });
+  if(!ok) return;
+  await addSnapshot(`Before deleting term “${term.name}”`);
+  db.terms = db.terms.filter(t => t.id !== term.id);
+  db.activeTermId = db.terms[0].id;
+  commit(); render(); showToast('Term deleted');
+}
+
+/* ---------------- import / restore / autosave connect ---------------- */
+function describeDb(d){
+  return d.terms.map(t => `<b>${escapeHtml(t.name)}</b> (${t.entities.length} subjects, from ${fmtShort(t.start)})`).join('<br>');
+}
+function askImportChoice(imported, fileName){
+  return new Promise(resolve => {
+    let done = false;
+    const finish = v => { if(!done){ done = true; resolve(v); } };
+    openModal({
+      cls:'mid',
+      render:() => `<h4>Import “${escapeHtml(fileName)}”</h4>
+        <div class="modal-sub">This file contains:<br>${describeDb(imported)}</div>
+        <div class="modal-sub">A restore point is saved first either way, so nothing is lost by choosing wrong.</div>
+        <div class="modal-actions" style="flex-direction:column">
+          <button class="primary" data-choice="add">Add as new term${imported.terms.length > 1 ? 's' : ''} — keep everything I have</button>
+          <button class="ghost danger" data-choice="replace">Replace everything I have with this file</button>
+          <button class="ghost" data-choice="cancel">Cancel</button>
+        </div>`,
+      wire:root => root.querySelectorAll('[data-choice]').forEach(b => b.addEventListener('click', () => {
+        finish(b.dataset.choice === 'cancel' ? null : b.dataset.choice); closeModal();
+      })),
+      onClose:() => finish(null)
     });
   });
 }
-
-/* ---------- top-level events ---------- */
-document.getElementById('termName').addEventListener('change', async e=>{
-  state.term.name = e.target.value; await saveState();
-});
-document.getElementById('gearBtn').addEventListener('click', ()=>{
-  document.getElementById('settingsPanel').classList.toggle('open');
-});
-document.getElementById('termStart').addEventListener('change', async e=>{
-  state.term.start = e.target.value; await saveState(); render();
-});
-document.getElementById('totalClassDays').addEventListener('change', async e=>{
-  const v = parseInt(e.target.value,10);
-  if(v>0){ state.term.totalClassDays = v; await saveState(); render(); }
-});
-document.getElementById('addHoliday').addEventListener('click', async ()=>{
-  const t = todayISO();
-  state.term.holidays.push({id:uid(), start:t, end:t});
-  await saveState(); render();
-});
-
-document.getElementById('exportBtn').addEventListener('click', ()=>{
-  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const stamp = todayISO();
-  a.href = url;
-  a.download = `term-ledger-backup-${stamp}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-  showToast('Backup downloaded ✓');
-});
-
-document.getElementById('importBtn').addEventListener('click', ()=>{
-  document.getElementById('importFile').click();
-});
-document.getElementById('importFile').addEventListener('change', (e)=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = async (ev)=>{
-    try{
-      const parsed = JSON.parse(ev.target.result);
-      if(!parsed.entities || !parsed.term) throw new Error('not a valid backup');
-      if(!confirm('This will replace your current data with the backup. Continue?')) return;
-      state = parsed;
-      await saveState();
-      viewMonth = new Date(state.term.start+'T00:00:00');
-      viewMonth.setDate(1);
-      render();
-      showToast('Backup restored ✓');
-    }catch(err){
-      alert('Could not read that file — make sure it\'s a Term Ledger backup .json file.');
-    }
-    e.target.value = '';
-  };
-  reader.readAsText(file);
-});
-
-document.getElementById('connectAutosaveBtn').addEventListener('click', connectAutosaveFile);
-document.getElementById('disconnectAutosaveBtn').addEventListener('click', disconnectAutosaveFile);
-
-(async ()=>{
-  await loadState();
-  viewMonth = new Date(state.term.start+'T00:00:00');
-  viewMonth.setDate(1);
+async function handleImportFile(file){
+  let imported;
+  try{ imported = normalizeDb(JSON.parse(await file.text())); }
+  catch(err){
+    askConfirm({title:'Could not read that file', message:(err && err.message ? err.message + ' ' : '') + 'Choose a backup or autosave .json file exported from Term Ledger.', confirmLabel:'OK'});
+    return;
+  }
+  const mode = await askImportChoice(imported, file.name);
+  if(!mode) return;
+  await applyImport(imported, mode);
+  ui.perTerm = {};
   render();
-  await initAutosaveHandle();
-  renderAutosaveStatus();
-})();
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('service-worker.js').catch(e=>console.warn('SW registration failed', e));
-  });
+  showToast(mode === 'replace' ? 'Backup restored ✓' : 'Term added from file ✓');
 }
+async function restoreSnapshot(id){
+  const snaps = await listSnapshots();
+  const snap = snaps.find(s => s.id === id); if(!snap) return;
+  const ok = await askConfirm({
+    title:'Restore this snapshot?',
+    message:`Your data goes back to how it was on ${fmtStamp(snap.at)} (“${snap.label}”). Your current data is saved as a restore point first.`,
+    confirmLabel:'Restore'
+  });
+  if(!ok) return;
+  let restored;
+  try{ restored = normalizeDb(JSON.parse(snap.json)); }catch(e){ showToast('That snapshot could not be read'); return; }
+  await addSnapshot('Before restoring a snapshot');
+  restored.settings = db.settings; restored.lastExport = db.lastExport;
+  db = restored; ui.perTerm = {};
+  commit(); render(); showToast('Snapshot restored ✓');
+}
+async function connectAutosave(){
+  const res = await pickAutosaveFile();
+  if(!res) return;
+  if(res.existing && res.existing.parsed){
+    const imported = res.existing.parsed;
+    const choice = await new Promise(resolve => {
+      let done = false; const finish = v => { if(!done){ done = true; resolve(v); } };
+      openModal({
+        cls:'mid',
+        render:() => `<h4>That file already has data</h4>
+          <div class="modal-sub">It holds a Term Ledger backup${imported.savedAt ? ' saved ' + fmtStamp(imported.savedAt) : ''}:<br>${describeDb(imported)}</div>
+          <div class="modal-sub warn">Connecting it as your autosave file will overwrite it with what's in the app right now, unless you load it first.</div>
+          <div class="modal-actions" style="flex-direction:column">
+            <button class="primary" data-choice="load">Load it into the app (replace what I have), then keep it in sync</button>
+            <button class="ghost danger" data-choice="overwrite">Keep what's in the app and overwrite the file</button>
+            <button class="ghost" data-choice="cancel">Cancel</button>
+          </div>`,
+        wire:root => root.querySelectorAll('[data-choice]').forEach(b => b.addEventListener('click', () => { finish(b.dataset.choice); closeModal(); })),
+        onClose:() => finish('cancel')
+      });
+    });
+    if(choice === 'cancel') return;
+    if(choice === 'load'){
+      await applyImport(imported, 'replace'); ui.perTerm = {};
+    }
+  } else if(res.existing && res.existing.unreadable){
+    const ok = await askConfirm({title:'Overwrite this file?', message:'That file has content that is not a Term Ledger backup. Using it will overwrite it.', confirmLabel:'Overwrite', danger:true});
+    if(!ok) return;
+  }
+  await attachAutosaveHandle(res.handle);
+  render(); showToast('Autosave file connected ✓');
+}
+
+/* ---------------- start-up ---------------- */
+async function init(){
+  const loaded = await loadDb();
+  db = loaded.db;
+  if(!db.settings) db.settings = {autoDownloadOnLeave:false};
+  commit();
+  onFsChange = () => { if(ui.settingsOpen) renderSettings(curTerm(), computeTermInfo(curTerm())); };
+
+  $('termName').addEventListener('change', e => {
+    const term = curTerm(); term.name = e.target.value.trim() || 'Untitled term'; commit(); render();
+  });
+  $('termSelect').addEventListener('change', e => { db.activeTermId = e.target.value; commit(); render(); });
+  $('newTermBtn').addEventListener('click', newTerm);
+  $('routineBtn').addEventListener('click', () => openModal(routineModalSpec()));
+  $('gearBtn').addEventListener('click', () => { ui.settingsOpen = !ui.settingsOpen; render(); });
+  $('settingsPanel').addEventListener('click', onSettingsClick);
+  $('settingsPanel').addEventListener('change', onSettingsChange);
+  $('tabs').addEventListener('click', onTabsClick);
+  $('page').addEventListener('click', onPageClick);
+  $('page').addEventListener('change', onPageChange);
+  $('page').addEventListener('submit', onPageSubmit);
+  $('page').addEventListener('keydown', onPageKeydown);
+  $('importFile').addEventListener('change', e => {
+    const f = e.target.files[0]; e.target.value = '';
+    if(f) handleImportFile(f);
+  });
+
+  await fsInit();
+  render();
+
+  if(loaded.migrated){
+    await addSnapshot('Imported from the old app version');
+    showToast('Your saved data was carried over to the new version ✓');
+  } else if(loaded.unreadable){
+    askConfirm({title:'Some saved data could not be read', message:'A copy of the unreadable data was kept in browser storage under “term-ledger-unreadable-…”. You can import a backup file from Settings.', confirmLabel:'OK'});
+  }
+  dailySnapshot();
+  if(navigator.storage && navigator.storage.persist){
+    try{
+      persistState = (await navigator.storage.persisted()) ? 'granted' : ((await navigator.storage.persist()) ? 'granted' : 'denied');
+    }catch(e){ persistState = 'unknown'; }
+    if(ui.settingsOpen) render();
+  }
+  if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+    navigator.serviceWorker.register('service-worker.js').catch(err => console.warn('SW registration failed', err));
+  }
+}
+init();
+
 </script>
 </body>
 </html>
